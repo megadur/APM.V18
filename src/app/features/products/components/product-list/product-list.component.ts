@@ -4,18 +4,18 @@ import { Product } from '../../data/types/product';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { StarComponent } from '../../../../shared/star/star.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [
-    BrowserModule, 
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
+    RouterLink,
     StarComponent,
   ],
   templateUrl: './product-list.component.html',
