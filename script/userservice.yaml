@@ -1,0 +1,311 @@
+openapi: 3.0.3
+info:
+  title: UserService
+  version: 1.0.5
+  description: API des Userservice.
+servers:
+  - url: http://localhost:9000/api/v1
+paths:
+  /users/info:
+    get:
+      parameters:
+        - in: header
+          name: X-rolle
+          description: Bestimmt den Typ des Antwort-Objektes.
+          schema:
+            type: string
+          required: true
+      tags:
+        - Userservice
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                description: In Abhaengigkeit des Header-Parameters X-rolle wird bei Wert 'gutachter' GutachterDto, bei Wert 'gutachtermitarbeiter' GutachtermitarbeiterDto und bei Wert 'admin' AdminDto zurueckgegeben.
+                oneOf:
+                  - $ref: "#/components/schemas/GutachterDto"
+                  - $ref: "#/components/schemas/GutachtermitarbeiterDto"
+                  - $ref: "#/components/schemas/AdminDto"
+          description: "OK"
+      security:
+        - BearerAuth: []
+      operationId: getUserInfo
+      description: ...
+  /users/activated:
+    get:
+      tags:
+        - Userservice
+      parameters:
+        - name: code
+          schema:
+            type: string
+          in: query
+          required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: boolean
+          description: OK
+      security:
+        - BearerAuth: []
+      operationId: activateUser
+      description: ...
+  /users:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/GutachterDto"
+                - $ref: "#/components/schemas/GutachtermitarbeiterDto"
+      tags:
+        - Userservice
+      responses:
+        "200":
+          description: OK
+      security:
+        - BearerAuth: []
+      operationId: updateUser
+      description: ...
+components:
+  schemas:
+    AddresseDto:
+      type: object
+      properties:
+        strasse:
+          type: string
+          example: Bernauer Straße
+        hausnummer:
+          type: string
+          example: 3a
+        plz:
+          type: string
+          example: 10854
+        ort:
+          type: string
+          example: Berlin
+        addresszusatz:
+          type: string
+          example: 4. OG
+        postfach:
+          type: string
+          example: Postfach 3
+        land:
+          type: string
+          example: Schlaraffenland
+    EinstellungDto:
+      description: ""
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        key: value
+    NameDto:
+      description: ""
+      required:
+        - nachname
+        - vorname
+      type: object
+      properties:
+        nachname:
+          type: string
+        vorname:
+          type: string
+        anrede:
+          type: string
+        titel:
+          type: string
+        namenszusatz:
+          type: string
+    KontaktDto:
+      type: object
+      required:
+        - typ
+        - wert
+        - anmerkung
+      properties:
+        typ:
+          type: string
+          enum:
+            - Email
+            - Telefon
+          example: Email
+        wert:
+          type: string
+          example: gutachter@praxis.de
+        anmerkung:
+          type: string
+          example: primary
+    OrganisationDto:
+      type: object
+      required:
+        - orgId
+        - adresse
+      properties:
+        orgId:
+          $ref: "#/components/schemas/UUID"
+        ik:
+          type: string
+          description: IK-Nummer der Organisation
+          example: "222222228"
+        ktan:
+          type: string
+          description: KTAN ist die DRV-uebergreifende eindeutige Nummer des Traegers
+          example: "70"
+        institutionsname1:
+          type: string
+          description: Praxisname Zeile 1
+        institutionsname2:
+          type: string
+          description: Praxisname Zeile 2
+        zusatz:
+          type: string
+        adresse:
+          $ref: "#/components/schemas/AddresseDto"
+    NutzerprofilDto:
+      description: ""
+      required:
+        - test_rolle
+        - organisation
+        - name
+        - rollen
+        - adressen
+        - kontakt
+        - nutzerstatus
+      type: object
+      properties:
+        test_rolle:
+          type: string
+        organisation:
+          $ref: "#/components/schemas/OrganisationDto"
+          description: ""
+        name:
+          $ref: "#/components/schemas/NameDto"
+          description: ""
+        rollen:
+          description: ""
+          type: array
+          items:
+            type: string
+        adressen:
+          description: ""
+          type: array
+          items:
+            $ref: "#/components/schemas/AddresseDto"
+        kontakt:
+          $ref: "#/components/schemas/KontaktDto"
+          description: ""
+        letzterLogin:
+          $ref: "#/components/schemas/LastLoginDto"
+          readOnly: true
+          description: ""
+        nutzerstatus:
+          type: string
+          enum:
+            - angelegt
+            - emails_verifiziert
+            - aktiviert
+            - gesperrt
+          readOnly: true
+          description: ""
+        settings:
+          $ref: "#/components/schemas/EinstellungDto"
+          description: ""
+        avatar:
+          type: string
+          readOnly: true
+          description: Link zum Avatar oder Default-Avatar
+    LastLoginDto:
+      description: ""
+      required:
+        - ipV4
+        - loginTimestamp
+        - userAgent
+      type: object
+      properties:
+        ipV4:
+          type: string
+          description: ""
+        loginTimestamp:
+          type: string
+          format: date-time
+          description: ""
+        userAgent:
+          type: string
+          description: ""
+        fingerprint:
+          type: string
+          description: ""
+    RvSmdIdDto:
+      description: ""
+      type: object
+      required:
+        - ktan
+        - gutachterId
+      properties:
+        ktan:
+          type: string
+        gutachterId:
+          type: string
+    GutachterDto:
+      description: ""
+      allOf:
+        - $ref: "#/components/schemas/NutzerprofilDto"
+      properties:
+        fachrichtung:
+          description: ""
+          type: string
+        lanr:
+          description: ""
+          type: string
+        efn:
+          description: ""
+          type: string
+        verfuegbarkeit:
+          description: schema fuer Verfuegbarkeit muss noch angelegt werden
+        zuordnung:
+          type: array
+          items:
+            $ref: "#/components/schemas/RvSmdIdDto"
+          minItems: 1
+          description: ""
+      required:
+        - zuordnung
+    GutachtermitarbeiterDto:
+      description: ""
+      allOf:
+        - $ref: "#/components/schemas/NutzerprofilDto"
+        - type: object
+    AdminDto:
+      description: ""
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/NutzerprofilDto"
+        - type: object
+    UUID:
+      description: UUID type
+      type: string
+      format: uuid
+      example: 7ca85f64-5717-4562-a3fc-2c963f66afa8
+  parameters:
+    userId:
+      name: userId
+      description: The userId as uuid
+      schema:
+        $ref: "#/components/schemas/UUID"
+      in: query
+      required: true
+  securitySchemes:
+    BearerAuth:
+      scheme: bearer
+      type: http
+tags:
+  - name: Userservice
+    description: Userservice fuer die Gutachtenplattform
+    externalDocs:
+      description: rvWiki
+      url: https://rvwiki.drv.drv

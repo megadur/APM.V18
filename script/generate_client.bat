@@ -11,7 +11,16 @@ SET ADD_PROP=
 
 
 SET INFILE="swagger.yaml"
-SET OUTFILE="../src/generated/ArzQaWebClient"
+SET INFILE="userservice.yaml"
+SET INFILE="customer-support.yaml"
+::SET INFILE="customer-insights.yaml"
+::SET INFILE="Customer-Credit-API.yaml"
+
+SET OUTFILE="../src/generated/arzticlient-client"
+SET OUTFILE="../src/generated/customer-support-client"
+::SET OUTFILE="../src/generated/customer-insights-client"
+::SET OUTFILE="../src/generated/Customer-Credit-API-client"
+
 
 
 ::del %OUTFILE% /Q

@@ -5,22 +5,27 @@ import {
 } from '../../../../generated/ArzQaWeb';
 import { Observable, firstValueFrom } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import {
+  GutachterDto,
+  UserserviceService,
+} from '../../../../generated/userservice-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  accountService = inject(AccountService);
-  permissions: PermissionViewModel[] | undefined | null = null;
+  service = inject(UserserviceService);
+  permissions: any;
+
   constructor() {}
   onInit() {
-    this.accountService.accountPermissionsGet().subscribe((res) => {
+    this.service.getUserInfo('gutachter').subscribe((res) => {
       console.log('UserService', res);
     });
   }
-  xgetUser(): Observable<PermissionViewModel[]> {
-    this.accountService.accountPermissionsGet('body').subscribe({
-      next: (data) => {
+  getUser1(): Observable<GutachterDto> {
+    this.service.getUserInfo('gutachter').subscribe({
+      next: (data: any) => {
         this.permissions = data;
         //    console.log('Permissions:', this.permissions);
       },
@@ -28,14 +33,12 @@ export class UserService {
         console.error('Error fetching permissions:', error);
       },
     });
-
-    console.log('UserService.getUser().permissions', this.permissions);
-    return this.accountService.accountPermissionsGet('body');
+    return this.service.getUserInfo('gutachter') as Observable<GutachterDto>;
   }
   async getUser() {
     try {
       const data = (await firstValueFrom(
-        this.accountService.accountPermissionsGet('body'),
+        this.service.getUserInfo('body'),
       )) as unknown as HttpResponse<PermissionViewModel[]>;
       this.permissions = data.body;
       console.log('UserService.getUser().permissions', this.permissions);
@@ -47,9 +50,9 @@ export class UserService {
   }
   getUser2() {
     try {
-      const data = this.accountService.accountPermissionsGet(
-        'body',
-      ) as unknown as HttpResponse<PermissionViewModel[]>;
+      const data = this.service.getUserInfo('body') as unknown as HttpResponse<
+        PermissionViewModel[]
+      >;
 
       this.permissions = data.body;
       console.log('UserService.getUser2().permissions', this.permissions);

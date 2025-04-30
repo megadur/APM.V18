@@ -4,6 +4,8 @@ import { ProductListComponent } from './product-list.component';
 import { of, throwError } from 'rxjs';
 import { ProductService } from '../../data/service/product.service';
 import { Product } from '../../data/types/product';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 describe('ProductListComponent', () => {
   let component: ProductListComponent;
@@ -12,6 +14,7 @@ describe('ProductListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProductListComponent],
+      providers: [provideRouter([]), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductListComponent);
@@ -70,6 +73,7 @@ describe('ProductListComponent', () => {
       const errorMessage = 'Error loading products';
       mockProductService.getProducts.and.returnValue(
         throwError(() => errorMessage),
+        28,
       );
 
       component.ngOnInit();
