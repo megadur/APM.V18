@@ -45,4 +45,18 @@ export class UserService {
       throw error;
     }
   }
+  getUser2() {
+    try {
+      const data = this.accountService.accountPermissionsGet(
+        'body',
+      ) as unknown as HttpResponse<PermissionViewModel[]>;
+
+      this.permissions = data.body;
+      console.log('UserService.getUser2().permissions', this.permissions);
+      return data.body;
+    } catch (error) {
+      console.error('Error fetching permissions:', error);
+      throw error;
+    }
+  }
 }
