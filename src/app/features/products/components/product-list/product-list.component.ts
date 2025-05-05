@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../data/service/product.service';
 import { Product } from '../../data/types/product';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { StarComponent } from '../../../../shared/star/star.component';
     StarComponent,
   ],
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  styleUrl: './product-list.component.css',
 })
 export class ProductListComponent implements OnInit {
   pageTitle = 'Product List';
@@ -34,39 +34,53 @@ export class ProductListComponent implements OnInit {
   }
   set listFilter(value: string) {
     this._listFilter = value;
-    this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
+    this.filteredProducts = this.listFilter
+      ? this.performFilter(this.listFilter)
+      : this.products;
   }
 
   filteredProducts: Product[] = [];
   products: Product[] = [];
+  private productService = inject(ProductService);
 
-  constructor(private productService: ProductService) { }
+  constructor() {}
 
   performFilter(filterBy: string): Product[] {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.products.filter((product: Product) =>
-      product.productName?.toLocaleLowerCase().indexOf(filterBy) !== -1);
+    return this.products.filter(
+      (product: Product) =>
+        product.productName?.toLocaleLowerCase().indexOf(filterBy) !== -1,
+    );
   }
 
   // Checks both the product name and tags
   performFilter2(filterBy: string): Product[] {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.products.filter((product: Product) =>
-      product.productName?.toLocaleLowerCase().indexOf(filterBy) !== -1 ||
-      (product.tags && product.tags.some(tag => tag.toLocaleLowerCase().indexOf(filterBy) !== -1)));
+    return this.products.filter(
+      (product: Product) =>
+        product.productName?.toLocaleLowerCase().indexOf(filterBy) !== -1 ||
+        (product.tags &&
+          product.tags.some(
+            (tag) => tag.toLocaleLowerCase().indexOf(filterBy) !== -1,
+          )),
+    );
   }
 
   toggleImage(): void {
     this.showImage = !this.showImage;
   }
-
+  ngOnInit1() {
+    this.productService.getProducts().subscribe((products) => {
+      this.products = products;
+    });
+  }
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
-      next: products => {
+      next: (products) => {
         this.products = products;
         this.filteredProducts = this.products;
       },
-      error: err => this.errorMessage = err
+      error: (err) => (this.errorMessage = err),
     });
   }
 }

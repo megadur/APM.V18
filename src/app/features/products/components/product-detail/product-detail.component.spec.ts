@@ -6,7 +6,7 @@ import { ProductService } from '../../data/service/product.service';
 import { Product } from '../../data/types/product';
 import { ProductDetailComponent } from './product-detail.component';
 import { Observable, of, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 describe('ProductDetailComponent', () => {
   let component: ProductDetailComponent;
@@ -17,7 +17,11 @@ describe('ProductDetailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProductDetailComponent],
-      providers: [provideRouter([]), provideHttpClientTesting()],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductDetailComponent);

@@ -1,21 +1,15 @@
+import { HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
-  AccountService,
-  PermissionViewModel,
-} from '../../../../generated/ArzQaWeb';
-import { Observable, firstValueFrom } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
-import {
-  GutachterDto,
-  UserserviceService,
+  GetUserInfo200Response,
+  UserserviceClient,
 } from '../../../../generated/userservice-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  service = inject(UserserviceService);
-  permissions: any;
+  service = inject(UserserviceClient);
 
   constructor() {}
   onInit() {
@@ -23,42 +17,18 @@ export class UserService {
       console.log('UserService', res);
     });
   }
-  getUser1(): Observable<GutachterDto> {
-    this.service.getUserInfo('gutachter').subscribe({
-      next: (data: any) => {
-        this.permissions = data;
-        //    console.log('Permissions:', this.permissions);
-      },
-      error: (error) => {
-        console.error('Error fetching permissions:', error);
-      },
-    });
-    return this.service.getUserInfo('gutachter') as Observable<GutachterDto>;
-  }
-  async getUser() {
-    try {
-      const data = (await firstValueFrom(
-        this.service.getUserInfo('body'),
-      )) as unknown as HttpResponse<PermissionViewModel[]>;
-      this.permissions = data.body;
-      console.log('UserService.getUser().permissions', this.permissions);
-      return data.body;
-    } catch (error) {
-      console.error('Error fetching permissions:', error);
-      throw error;
-    }
-  }
-  getUser2() {
-    try {
-      const data = this.service.getUserInfo('body') as unknown as HttpResponse<
-        PermissionViewModel[]
-      >;
 
-      this.permissions = data.body;
-      console.log('UserService.getUser2().permissions', this.permissions);
+  getUser() {
+    try {
+      const data = this.service.getUserInfo(
+        'gutachter',
+        'body',
+      ) as unknown as HttpResponse<GetUserInfo200Response>;
+
+      console.log('UserService.getUser()', data.body);
       return data.body;
     } catch (error) {
-      console.error('Error fetching permissions:', error);
+      console.error('Error fetching getUserInfo:', error);
       throw error;
     }
   }
