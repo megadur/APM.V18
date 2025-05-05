@@ -81,7 +81,7 @@ describe('ProductListComponent', () => {
     expect(component.filteredProducts).toEqual(mockProducts);
   });
 
-  fit('should handle error on productService.getProducts failure', () => {
+  it('should handle error on productService.getProducts failure', () => {
     const errorMessage = 'Error loading products';
     spyOn(productService, 'getProducts').and.returnValue(
       throwError(() => errorMessage),

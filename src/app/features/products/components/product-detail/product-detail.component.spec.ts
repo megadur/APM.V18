@@ -37,19 +37,8 @@ describe('ProductDetailComponent', () => {
 
   it('should set product when getProduct is called successfully', () => {
     const mockProduct = { id: 1, productName: 'Test Product' } as Product;
-    //const productService = TestBed.inject(ProductService);
-    //const productService = new ProductService(this.httpClient);
-
+    const productService = TestBed.inject(ProductService);
     spyOn(productService, 'getProduct').and.returnValue(of(mockProduct));
-    // spyOn(productService, 'getProduct').and.returnValue(
-    // {
-    //   subscribe: (callbacks: {
-    //     next: (product: Product) => void;
-    //     error: (err: string) => void;
-    //   }) => {
-    //     callbacks.next(mockProduct);
-    //   },
-    // });
 
     component.getProduct(1);
 
