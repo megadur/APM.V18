@@ -18,13 +18,13 @@ import { NameDto } from './nameDto';
  * 
  */
 export interface AdminDto { 
-    test_rolle: string;
+    test_rolle?: string;
     organisation: OrganisationDto;
     name: NameDto;
     /**
      * 
      */
-    rollen: Array<string>;
+    rolle: Array<string>;
     /**
      * 
      */

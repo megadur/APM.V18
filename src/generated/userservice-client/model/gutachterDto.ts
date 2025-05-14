@@ -39,13 +39,13 @@ export interface GutachterDto {
      * 
      */
     zuordnung: Array<RvSmdIdDto>;
-    test_rolle: string;
+    test_rolle?: string;
     organisation: OrganisationDto;
     name: NameDto;
     /**
      * 
      */
-    rollen: Array<string>;
+    rolle: Array<string>;
     /**
      * 
      */

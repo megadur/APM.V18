@@ -169,10 +169,9 @@ components:
     NutzerprofilDto:
       description: ""
       required:
-        - test_rolle
         - organisation
         - name
-        - rollen
+        - rolle
         - adressen
         - kontakt
         - nutzerstatus
@@ -186,9 +185,8 @@ components:
         name:
           $ref: "#/components/schemas/NameDto"
           description: ""
-        rollen:
+        rolle:
           description: ""
-          type: array
           items:
             type: string
         adressen:

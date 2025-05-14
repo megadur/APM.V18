@@ -1,7 +1,7 @@
 @echo off
 SET ADD_PROP=
-SET ADD_PROP=%ADD_PROP%serviceSuffix=Client,
-SET ADD_PROP=%ADD_PROP%serviceFileSuffix=.client,
+SET ADD_PROP=%ADD_PROP%serviceSuffix=ApiClient,
+SET ADD_PROP=%ADD_PROP%serviceFileSuffix=.apiclient,
 SET ADD_PROP=%ADD_PROP%withInterface=true,
 
 
