@@ -1,0 +1,881 @@
+<!doctype html>
+<!-- saved from url=(0064)https://www.gerome.dev/blog/standalone-angular-folder-structure/ -->
+<html lang="fr" data-lt-installed="true" data-qb-installed="true">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Global Metadata -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="https://www.gerome.dev/favicon.ico" />
+    <meta name="generator" content="Astro v3.0.6" />
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://gerome.dev/blog/standalone-angular-folder-structure/" />
+    <!-- Primary Meta Tags -->
+    <title>Standalone Angular folder structure</title>
+    <meta name="title" content="Standalone Angular folder structure" />
+    <meta name="description" content="Learn to create a scalable and maintainable Standalone Angular folder structure!" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gerome.dev/blog/standalone-angular-folder-structure/" />
+    <meta property="og:title" content="Standalone Angular folder structure" />
+    <meta property="og:description" content="Learn to create a scalable and maintainable Standalone Angular folder structure!" />
+    <meta property="og:image" content="https://gerome.dev/blog/standalone-angular-folder-structure/cover.png" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://gerome.dev/blog/standalone-angular-folder-structure/" />
+    <meta property="twitter:title" content="Standalone Angular folder structure" />
+    <meta property="twitter:description" content="Learn to create a scalable and maintainable Standalone Angular folder structure!" />
+    <meta property="twitter:image" content="https://gerome.dev/blog/standalone-angular-folder-structure/cover.png" />
+    <link rel="stylesheet" href="./Standalone Angular folder structure_files/_...slug_.5a7dda58.css" />
+    <style type="text/css">
+      .introduction[data-astro-cid-2ri7i3m6] {
+        max-width: 700px;
+        position: relative;
+        padding-block-start: 2rem;
+      }
+    </style>
+    <style type="text/css">
+      .lf-progress {
+        -webkit-appearance: none;
+        -moz-apperance: none;
+        width: 100%;
+        /* margin: 0 10px; */
+        height: 4px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .lf-progress:focus {
+        outline: none;
+        border: none;
+      }
+      .lf-progress::-moz-range-track {
+        cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+      }
+      .lf-progress::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        height: 13px;
+        width: 13px;
+        border: 0;
+        border-radius: 50%;
+        background: #0fccce;
+        cursor: pointer;
+      }
+      .lf-progress::-moz-range-thumb {
+        -moz-appearance: none !important;
+        height: 13px;
+        width: 13px;
+        border: 0;
+        border-radius: 50%;
+        background: #0fccce;
+        cursor: pointer;
+      }
+      .lf-progress::-ms-track {
+        width: 100%;
+        height: 3px;
+        cursor: pointer;
+        background: transparent;
+        border-color: transparent;
+        color: transparent;
+      }
+      .lf-progress::-ms-fill-lower {
+        background: #ccc;
+        border-radius: 3px;
+      }
+      .lf-progress::-ms-fill-upper {
+        background: #ccc;
+        border-radius: 3px;
+      }
+      .lf-progress::-ms-thumb {
+        border: 0;
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        background: #0fccce;
+        cursor: pointer;
+      }
+      .lf-progress:focus::-ms-fill-lower {
+        background: #ccc;
+      }
+      .lf-progress:focus::-ms-fill-upper {
+        background: #ccc;
+      }
+      .lf-player-container :focus {
+        outline: 0;
+      }
+      .lf-popover {
+        position: relative;
+      }
+
+      .lf-popover-content {
+        display: inline-block;
+        position: absolute;
+        opacity: 1;
+        visibility: visible;
+        transform: translate(0, -10px);
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+      }
+
+      .lf-popover-content.hidden {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(0, 0px);
+      }
+
+      .lf-player-btn-container {
+        display: flex;
+        align-items: center;
+      }
+      .lf-player-btn {
+        cursor: pointer;
+        fill: #999;
+        width: 14px;
+      }
+
+      .lf-player-btn.active {
+        fill: #555;
+      }
+
+      .lf-popover {
+        position: relative;
+      }
+
+      .lf-popover-content {
+        display: inline-block;
+        position: absolute;
+        background-color: #ffffff;
+        opacity: 1;
+
+        transform: translate(0, -10px);
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        transition: all 0.3s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+        padding: 10px;
+      }
+
+      .lf-popover-content.hidden {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(0, 0px);
+      }
+
+      .lf-arrow {
+        position: absolute;
+        z-index: -1;
+        content: '';
+        bottom: -9px;
+        border-style: solid;
+        border-width: 10px 10px 0px 10px;
+      }
+
+      .lf-left-align,
+      .lf-left-align .lfarrow {
+        left: 0;
+        right: unset;
+      }
+
+      .lf-right-align,
+      .lf-right-align .lf-arrow {
+        right: 0;
+        left: unset;
+      }
+
+      .lf-text-input {
+        border: 1px #ccc solid;
+        border-radius: 5px;
+        padding: 3px;
+        width: 60px;
+        margin: 0;
+      }
+
+      .lf-color-picker {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        height: 90px;
+      }
+
+      .lf-color-selectors {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .lf-color-component {
+        display: flex;
+        flex-direction: row;
+        font-size: 12px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lf-color-component strong {
+        width: 40px;
+      }
+
+      .lf-color-component input[type='range'] {
+        margin: 0 0 0 10px;
+      }
+
+      .lf-color-component input[type='number'] {
+        width: 50px;
+        margin: 0 0 0 10px;
+      }
+
+      .lf-color-preview {
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 5px;
+      }
+
+      .lf-preview {
+        height: 60px;
+        width: 60px;
+      }
+
+      .lf-popover-snapshot {
+        width: 150px;
+      }
+      .lf-popover-snapshot h5 {
+        margin: 5px 0 10px 0;
+        font-size: 0.75rem;
+      }
+      .lf-popover-snapshot a {
+        display: block;
+        text-decoration: none;
+      }
+      .lf-popover-snapshot a:before {
+        content: '⥼';
+        margin-right: 5px;
+      }
+      .lf-popover-snapshot .lf-note {
+        display: block;
+        margin-top: 10px;
+        color: #999;
+      }
+      .lf-player-controls > div {
+        margin-right: 5px;
+        margin-left: 5px;
+      }
+      .lf-player-controls > div:first-child {
+        margin-left: 0px;
+      }
+      .lf-player-controls > div:last-child {
+        margin-right: 0px;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col items-center">
+    <header class="flex items-center px-6 min-h-100 fixed w-full min-h-12 gap-12" data-astro-cid-3ef6ksr2="">
+      <a class="flex items-center" href="https://www.gerome.dev/" data-astro-cid-3ef6ksr2=""
+        ><img
+          src="./Standalone Angular folder structure_files/profile.png"
+          alt=""
+          data-astro-cid-3ef6ksr2=""
+          width="42"
+          height="32"
+          loading="lazy"
+          decoding="async"
+        /><span class="hidden sm:block" data-astro-cid-3ef6ksr2="">Gerome Grignon</span></a
+      >
+      <nav data-astro-cid-3ef6ksr2="">
+        <ul class="flex gap-4" data-astro-cid-3ef6ksr2="">
+          <li data-astro-cid-eimmu3lg=""><a href="https://www.gerome.dev/blog" class="link" data-astro-cid-eimmu3lg="">Blog</a></li>
+          <li data-astro-cid-eimmu3lg=""><a href="https://www.gerome.dev/#about" class="link" data-astro-cid-eimmu3lg="">About me</a></li>
+          <li data-astro-cid-eimmu3lg="">
+            <a href="https://www.gerome.dev/#projects" class="link" data-astro-cid-eimmu3lg="">Projects</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="mt-20 max-w-full px-4 flex flex-col">
+      <article class="prose prose-lg prose-img:mx-auto px-4">
+        <img
+          class="mb-8 rounded-xl"
+          width="720"
+          height="360"
+          src="./Standalone Angular folder structure_files/cover.png"
+          aria-hidden="true"
+          alt=""
+        />
+        <div class="text-cyan-600 uppercase">Learning</div>
+        <h1 class="text-4xl m-0">Standalone Angular folder structure</h1>
+        <h2 class="text-2xl m-0 font-normal">Learn to create a scalable and maintainable Standalone Angular folder structure!</h2>
+        <time datetime="2024-03-15T00:00:00.000Z">Mar 15, 2024</time>
+        <figure>
+          <figcaption class="mb-2">Listen as a podcast</figcaption>
+          <audio controls="" src="/audio/standalone-structure.wav"></audio>
+        </figure>
+        <hr />
+        <p>
+          Starting with Angular 17 release, creating an Angular application with <code>ng new</code> will generate a
+          <strong>Standalone application</strong> by default. Not only it’ll introduce some changes in the way you organize your application
+          but that’s a good opportunity to review the architecture itself by now!
+        </p>
+        <p>
+          This article focuses on the content of your <code>src/app</code> folder, and how to organize it to make it easier to maintain and
+          scale.
+        </p>
+        <p>
+          For convenience, the structure examples won’t include the default files created at the root of the <code>src/app</code> folder by
+          the Angular CLI:
+        </p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── app.component.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── app.component.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── app.component.html</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── app.component.css</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── app.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── app.config.ts</span></span></code></pre>
+        <h2 id="types-of-content">Types of content</h2>
+        <p>There are three types of code content in the <code>src/app</code> folder:</p>
+        <ul>
+          <li>the code specific to a non business feature</li>
+          <li>the code specific to a business feature</li>
+          <li>the code shared between features</li>
+        </ul>
+        <p><img src="./Standalone Angular folder structure_files/main-folders.png" alt="Angular application architecture" /></p>
+        <p>That’s commonly translated into the following folder structure:</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── core</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── features</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── shared</span></span></code></pre>
+        <p><img src="./Standalone Angular folder structure_files/main-folders-naming.png" alt="Angular application architecture" /></p>
+        <blockquote>
+          <p>That’s the first level of organization of your application, with a dedicated folder for each type of content.</p>
+        </blockquote>
+        <hr />
+        <h2 id="non-business-feature-core-folder">Non business feature (core folder)</h2>
+        <p><img src="./Standalone Angular folder structure_files/non-business-banner.png" alt="Non business feature" /></p>
+        <p>A non business feature is a feature that is <strong>not specific to the business domain of the application</strong>.</p>
+        <p>Some examples are:</p>
+        <ul>
+          <li>the layout of your application</li>
+          <li>the authentication process.</li>
+        </ul>
+        <p>For this content, you’ll want to create a dedicated folder in the <code>src/app/core</code> folder.</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── layout</span></span>
+<span class="line"><span style="color: #e1e4e8">        └── auth</span></span></code></pre>
+        <p>Let’s take a closer look at the <code>auth</code> folder as an example!</p>
+        <h3 id="authentication">Authentication</h3>
+        <p>Common features of an authentication process are:</p>
+        <ul>
+          <li>the login page</li>
+          <li>the registration page</li>
+          <li>the password recovery page</li>
+        </ul>
+        <p>You will also want to define:</p>
+        <ul>
+          <li>the user model</li>
+          <li>the authentication service to communicate with the server</li>
+          <li>the authentication guard to protect routes</li>
+        </ul>
+        <p>Let’s organize these files!</p>
+        <h4 id="pages">Pages</h4>
+        <p>
+          We want to differenciate the routed components from the rest of the code. To do so, create a dedicated folder for the pages of the
+          feature and a routing file to define the routes of the feature.
+        </p>
+        <p>At this point your core folder will look like this:</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        └── auth</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── login</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── register</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── password-recovery</span></span></code></pre>
+        <blockquote>
+          <p>
+            If your feature only includes 1 route, you can declare it in your <code>src/app/app.routes.ts</code> file. In this situation, do
+            not create a dedicated <code>auth.routes.ts</code> file.
+          </p>
+        </blockquote>
+        <h4 id="global-authentication-code">Global authentication code</h4>
+        <p>
+          While being specific to the authentication feature, some code is shared between the different pages of the feature, or even more.
+        </p>
+        <p>
+          The user model, the authentication service are shared between the <strong>different pages of the auth feature</strong>.<br />
+          The authentication guard is shared between the <strong>different pages of the whole application</strong>.
+        </p>
+        <p>Create a dedicated folder for each type of content:</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        └── auth</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.model.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.guard.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.guard.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── login</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── register</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── password-recovery</span></span></code></pre>
+        <p>
+          If you know that you’ll have more than one related file in the future, create dedicated folders for each type of content from the
+          beginning:
+        </p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        └── auth</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── models</span></span>
+<span class="line"><span style="color: #e1e4e8">                └── auth.model.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── guards</span></span>
+<span class="line"><span style="color: #e1e4e8">                └── auth.guard.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">                └── auth.guard.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── services</span></span>
+<span class="line"><span style="color: #e1e4e8">                └── auth.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── login</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── register</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── password-recovery</span></span></code></pre>
+        <h3 id="pages-folders">Pages folders</h3>
+        <p>
+          The pages folders are used to store the <strong>routed component</strong> and all the related and specific code of a page. At the
+          root of the folder, you’ll find the routed component, and more folders for content shared between the different pages of the
+          feature:
+        </p>
+        <ul>
+          <li><code>components</code> for the components used in the pages</li>
+          <li><code>services</code> for the services used in the pages</li>
+          <li><code>models</code> for the models used in the pages</li>
+          <li><code>directives</code> for the directives used in the pages</li>
+          <li><code>pipes</code> for the pipes used in the pages</li>
+        </ul>
+        <p>The folder will look like this:</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        └── auth</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── login</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── login.component.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── login.component.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── login.component.html</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── login.component.css</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── components</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── services</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── models</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── directives</span></span>
+<span class="line"><span style="color: #e1e4e8">                    ├── pipes</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── register</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── password-recovery</span></span></code></pre>
+        <p>Apply the same logic to the other features of your core folder.</p>
+        <h3 id="isolated-non-business-feature">Isolated non business feature</h3>
+        <p>
+          Some features might be as simple as a service or a directive. To simplify your structure, you might not want to create a dedicated
+          folder for them in the <code>src/app/core</code> folder. In this situation, place the code directly at the root of the folder, in
+          a folder based on its technical shape (services, directives, pipes, …).
+        </p>
+        <p>Like these <code>notification.service.ts</code> and <code>api.service.ts</code> files:</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── services</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── notification.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── notification.servicespec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── interceptors</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── api.interceptor.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── api.interceptor.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── auth</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.model.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.guard.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.guard.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── login</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── register</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── password-recovery</span></span></code></pre>
+        <hr />
+        <h2 id="business-feature">Business feature</h2>
+        <p><img src="./Standalone Angular folder structure_files/business-banner.png" alt="business feature" /></p>
+        <p>
+          A business feature is a feature that is specific to the business domain of the application. Some examples are for e-commerce
+          applications: the product list, the loyalty program, the cart, and the checkout process.
+        </p>
+        <p>This code lives in the <code>src/app/features</code> folder.</p>
+        <p>This folder uses the same logic as the core folder:</p>
+        <ul>
+          <li>a dedicated folder for each feature</li>
+          <li>a dedicated folder for the pages of the feature</li>
+          <li>more folders for content shared between the different pages of the feature</li>
+        </ul>
+        <p>There is one exception though!</p>
+        <p>
+          While you can have some isolated pieces of code at the root of the <code>src/app/core</code> folder, you won’t have any at the
+          root of the <code>src/app/features</code> folder. It’s all about business isolated features.
+        </p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── features</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── product</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── cart</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── checkout</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.model.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.guard.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.guard.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── address</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── payment</span></span></code></pre>
+        <h2 id="shared-code">Shared code</h2>
+        <p><img src="./Standalone Angular folder structure_files/shared-banner.png" alt="Shared code" /></p>
+        <p>
+          The shared code is the code that is shared between the different features of the application. There are two kind of code being
+          shared between features:
+        </p>
+        <ul>
+          <li>the one including some business logic</li>
+          <li>the one that doesn’t.</li>
+        </ul>
+        <p>The shared code lives in the <code>src/app/shared</code> folder.</p>
+        <h3 id="dumbed-shared-code">Dumbed shared code</h3>
+        <p>
+          You might have heard about <em>dumb components</em> and <em>smart components</em>. The <em>dumb components</em> are the components
+          that don’t include any business logic.
+        </p>
+        <p>
+          Let’s take a notification component as an example. Even if the data to fill it comes from a business feature, the notification
+          should not care. If it expects a title and a message, it should not care about the origin of the title and the message. And its
+          <code>@Input</code> should be named <code>title</code> and <code>message</code>, not <code>productTitle</code> and
+          <code>productMessage</code>.
+        </p>
+        <p>
+          Such a component is perfectly suited to be placed in the <code>src/app/shared</code> folder. Such components, pipes and some util
+          functions are the perfect example of ‘dumb’ shared code.
+        </p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── shared</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── components</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.html</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.css</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── pipes</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── date.pipe.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── date.pipe.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── utils</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── array.utils.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── array.utils.spec.ts</span></span></code></pre>
+        <h3 id="smart-shared-code">Smart shared code</h3>
+        <p>
+          The ‘smart’ shared code is the code that includes some business logic. Where to put it as it’s both <strong>shared</strong> and
+          <strong>business</strong> specific?
+        </p>
+        <p>There are two strategies to handle this situation:</p>
+        <ul>
+          <li>place this content in the <code>src/app/shared</code> folder</li>
+          <li>place this content in the related feature folder in the <code>src/app/features</code> folder</li>
+        </ul>
+        <p>
+          I encourage to use the second solution, as it makes the code more discoverable and easier to maintain. That’s quite common for a
+          feature to include some part of another one.
+        </p>
+        <p>
+          It can be about Shared UI content, like a <code>product-card</code> component, or shared business logic, like a
+          <code>product.service</code> or a <code>product.model</code>. Placing it in the shared folder will quickly lead to have too much
+          content there, making it hard to maintain.
+        </p>
+        <p>Here is a resume of the whole application structure:</p>
+        <pre
+          is:raw=""
+          class="astro-code github-dark"
+          style="background-color: #24292e; overflow-x: auto"
+          tabindex="0"
+        ><code><span class="line"><span style="color: #e1e4e8">src</span></span>
+<span class="line"><span style="color: #e1e4e8">└── app</span></span>
+<span class="line"><span style="color: #e1e4e8">    ├── core</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── layout</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── auth</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.model.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.guard.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.guard.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── auth.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── login</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── register</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── password-recovery</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── services</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── notification.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── notification.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── interceptors</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── api.interceptor.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── api.interceptor.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── features</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── product</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── cart</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── checkout</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.service.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.service.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.model.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.guard.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.guard.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── checkout.routes.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            └── pages</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── address</span></span>
+<span class="line"><span style="color: #e1e4e8">                ├── payment</span></span>
+<span class="line"><span style="color: #e1e4e8">    └── shared</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── components</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.html</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── notification.component.css</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── pipes</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── date.pipe.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── date.pipe.spec.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">        ├── utils</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── array.utils.ts</span></span>
+<span class="line"><span style="color: #e1e4e8">            ├── array.utils.spec.ts</span></span></code></pre>
+        <p>
+          <a href="https://github.com/gothinkster/angular-realworld-example-app">Angular RealWorld Example App</a> is a good example of a
+          real-world application using this structure.
+        </p>
+      </article>
+      <aside class="flex flex-col items-center gap-4 mt-16">
+        <p class="text-center">Enjoyed this article? Feel free to show your appreciation by buying me a coffee!</p>
+        <a class="p-4 rounded-xl shadow-xl" href="https://buymeacoffee.com/geromegrignon" target="_blank"
+          ><img
+            src="./Standalone Angular folder structure_files/buymeacoffee.svg"
+            class="text-center"
+            alt="Buy me a coffee"
+            width="150"
+            height="50"
+            loading="lazy"
+            decoding="async"
+        /></a>
+      </aside>
+      <hr class="mt-8" />
+      <section class="introduction flex flex-col m-auto" data-astro-cid-2ri7i3m6="">
+        <section class="flex justify-center items-end" data-astro-cid-2ri7i3m6="">
+          <img
+            src="./Standalone Angular folder structure_files/photo2.png"
+            alt=""
+            data-astro-cid-2ri7i3m6=""
+            width="170"
+            height="136"
+            loading="lazy"
+            decoding="async"
+          />
+          <article class="px-8" data-astro-cid-2ri7i3m6="">
+            <div class="text-4xl" data-astro-cid-2ri7i3m6="">Gerome Grignon</div>
+            <div data-astro-cid-2ri7i3m6="">Web developer</div>
+            <ul class="social-icons flex self-center gap-4" data-astro-cid-2ri7i3m6="">
+              <li data-astro-cid-2ri7i3m6="">
+                <a
+                  href="https://github.com/geromegrignon"
+                  target="_blank"
+                  class="mx-3 px-2"
+                  aria-label="Github"
+                  title="Github"
+                  data-astro-cid-2ri7i3m6=""
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: currentColor; transform:; msfilter:"
+                    data-astro-cid-2ri7i3m6=""
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"
+                      data-astro-cid-2ri7i3m6=""
+                    ></path></svg
+                ></a>
+              </li>
+              <li data-astro-cid-2ri7i3m6="">
+                <a
+                  href="https://twitter.com/GeromeDEV"
+                  target="_blank"
+                  class="mx-3 px-2"
+                  aria-label="Twitter"
+                  title="Twitter"
+                  data-astro-cid-2ri7i3m6=""
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: currentColor; transform:; msfilter:"
+                    data-astro-cid-2ri7i3m6=""
+                  >
+                    <path
+                      d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.611-.1-.923a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"
+                      data-astro-cid-2ri7i3m6=""
+                    ></path></svg
+                ></a>
+              </li>
+              <li data-astro-cid-2ri7i3m6="">
+                <a
+                  href="https://www.linkedin.com/in/gerome-grignon"
+                  target="_blank"
+                  class="mx-3 px-2"
+                  aria-label="Linkedin"
+                  title="Linkedin"
+                  data-astro-cid-2ri7i3m6=""
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: currentColor; transform:; msfilter:"
+                    data-astro-cid-2ri7i3m6=""
+                  >
+                    <circle cx="4.983" cy="5.009" r="2.188" data-astro-cid-2ri7i3m6=""></circle>
+                    <path
+                      d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z"
+                      data-astro-cid-2ri7i3m6=""
+                    ></path></svg
+                ></a>
+              </li>
+              <li data-astro-cid-2ri7i3m6="">
+                <a
+                  href="https://www.youtube.com/@GeromeDEV/featured"
+                  target="_blank"
+                  class="mx-3 px-2"
+                  aria-label="Youtube"
+                  title="Youtube"
+                  data-astro-cid-2ri7i3m6=""
+                  ><svg
+                    fill="#000000"
+                    height="24"
+                    width="24"
+                    id="Layer_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 310 310"
+                    xml:space="preserve"
+                    data-astro-cid-2ri7i3m6=""
+                  >
+                    <g id="XMLID_822_" data-astro-cid-2ri7i3m6="">
+                      <path
+                        id="XMLID_823_"
+                        d="M297.917,64.645c-11.19-13.302-31.85-18.728-71.306-18.728H83.386c-40.359,0-61.369,5.776-72.517,19.938
+		C0,79.663,0,100.008,0,128.166v53.669c0,54.551,12.896,82.248,83.386,82.248h143.226c34.216,0,53.176-4.788,65.442-16.527
+		C304.633,235.518,310,215.863,310,181.835v-53.669C310,98.471,309.159,78.006,297.917,64.645z M199.021,162.41l-65.038,33.991
+		c-1.454,0.76-3.044,1.137-4.632,1.137c-1.798,0-3.592-0.484-5.181-1.446c-2.992-1.813-4.819-5.056-4.819-8.554v-67.764
+		c0-3.492,1.822-6.732,4.808-8.546c2.987-1.814,6.702-1.938,9.801-0.328l65.038,33.772c3.309,1.718,5.387,5.134,5.392,8.861
+		C204.394,157.263,202.325,160.684,199.021,162.41z"
+                        data-astro-cid-2ri7i3m6=""
+                      ></path>
+                    </g></svg
+                ></a>
+              </li>
+              <!--
+
+                <li>
+                    <a href="/rss.xml" target="_blank" class="mx-3 px-2" aria-label="RSS Feed" title="RSS Feed">
+                        <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                style="fill: currentColor;transform: ;msFilter:;"
+                        >
+                            <path d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"
+                            ></path>
+                            <path d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"
+                            ></path>
+                            <circle cx="6" cy="18" r="2"></circle>
+                        </svg>
+                    </a>
+                </li>
+                -->
+            </ul>
+          </article>
+        </section>
+        <p class="text-stone-600 px-8 mt-8" data-astro-cid-2ri7i3m6="">
+          Welcome to my website dedicated to web development! Discover innovative tips and inspiring projects. Dive into the captivating
+          world of the web and let yourself be inspired by the enriching content that I share. Ready to explore?
+          <br data-astro-cid-2ri7i3m6="" />
+          Right this way!
+        </p>
+      </section>
+    </main>
+    <footer class="p-8 flex flex-wrap justify-center items-center w-full gap-1">
+      <span class="text-gray-500"> © 2024 Gerome Grignon. </span><span class="text-gray-500"> All rights reserved. </span
+      ><span class="text-gray-500"> Deployed on </span
+      ><a href="https://vercel.com/" target="_blank" rel="noopener noreferrer"
+        ><img
+          src="./Standalone Angular folder structure_files/vercel.png"
+          alt="Vercel"
+          width="80"
+          height="40"
+          loading="lazy"
+          decoding="async"
+      /></a>
+    </footer>
+  </body>
+</html>
