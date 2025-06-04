@@ -1,23 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule,
+  RouterOutlet,
+} from '@angular/router';
+import { APP_CONFIG } from './features/seanhaddock/app-config';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [    
+  imports: [
     RouterLinkActive,
     CommonModule,
     RouterModule,
-    RouterLink, 
+    RouterLink,
     //ProductModule,
     RouterOutlet,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'APM.V18';
+  title = 'Acme Product Management';
   pageTitle = 'Acme Product Management';
-
+  appConfig = inject(APP_CONFIG);
 }
