@@ -9,6 +9,9 @@
  */
 
 
+/**
+ * Adressinformationen des Nutzers oder der Organisation
+ */
 export interface AddresseDto { 
     strasse?: string;
     hausnummer?: string;

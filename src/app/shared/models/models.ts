@@ -106,35 +106,35 @@ export interface Gutachtenstatus {
 }
 
 export interface Gutachtenauftrag {
-  /**
-   * UUID of the created assessment.
-   */
-  readonly auftragsId: string;
-  proband: Proband;
-  gutachter: Gutachter;
-  readonly auftraggeber: Organisation;
-  readonly kennzeichen1?: string;
-  readonly kennzeichen2?: string;
-  gutachtenstatus: Gutachtenstatus;
-  readonly anhaenge?: DokumentOhneDaten[];
-  gutachten?: Gutachten;
-  /**
-   * Wann wurde der Auftrag in rvSMD angelegt.
-   */
-  readonly auftragsdatum: string;
-  /**
-   * Wann ist der Auftrag in rvGutachten angekommen.
-   */
-  readonly eingangsdatum: string;
-  /**
-   * Wann sind alle Dokumente zu einem Auftrag in rvGutachten einsehbar
-   */
-  readonly bereitstellungsdatum?: string;
-  /**
-   * Zu wann wird der Proband einbestellt
-   */
-  einbestelldatum?: string;
-}
+    /**
+     * UUID of the created assessment.
+     */
+    readonly auftragsId?: string;
+    proband?: Proband;
+    gutachter?: Gutachter;
+    readonly auftraggeber?: Organisation;
+    readonly kennzeichen1?: string;
+    readonly kennzeichen2?: string;
+    gutachtenstatus: Gutachtenstatus;
+    readonly anhaenge?: Array<DokumentOhneDaten>;
+    gutachten?: Gutachten;
+    /**
+     * Wann wurde der Auftrag in rvSMD angelegt.
+     */
+    readonly auftragsdatum: string;
+    /**
+     * Wann ist der Auftrag in rvGutachten angekommen.
+     */
+    readonly eingangsdatum: string;
+    /**
+     * Wann sind alle Dokumente zu einem Auftrag in rvGutachten einsehbar
+     */
+    readonly bereitstellungsdatum?: string;
+    /**
+     * Zu wann wird der Proband einbestellt
+     */
+    einbestelldatum?: string;
+  }
 
 export interface GutachtenauftragList {
   /**
@@ -196,12 +196,12 @@ export interface Person extends User {
 }
 
 export interface Proband {
-  vsnr: string;
-  geburtsdatum: string;
-  name: string;
-  vorname: string;
-  kontakte?: Kontakt[];
-  adresse?: Adresse;
+    vsnr?: string;
+    geburtsdatum?: string;
+    name?: string;
+    vorname?: string;
+    kontakte?: Array<Kontakt>;
+    adresse?: Adresse;
 }
 export type RolleTyp = 'gutachter' | 'mitarbeiter' | 'admin';
 export type StatusTyp = 'active' | 'locked' | 'unverified';

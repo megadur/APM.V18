@@ -1,5 +1,6 @@
 export * from './addresseDto';
 export * from './adminDto';
+export * from './errorResponseDto';
 export * from './getUserInfo200Response';
 export * from './gutachterDto';
 export * from './gutachtermitarbeiterDto';

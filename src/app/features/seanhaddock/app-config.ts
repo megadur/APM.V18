@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { InjectionToken } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
-export interface AppConfig {
-  apiHost: string;
+export interface EnvConfig {
+  apiUrl: string;
 }
 
-export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
+export const ENV_CONFIG = new InjectionToken<EnvConfig>('app.config');

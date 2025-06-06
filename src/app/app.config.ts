@@ -7,8 +7,8 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './features/products/data/product-data';
 import { provideLogger } from './shared/util-logger';
 import { loggerConfig } from './logger.config';
-import { APP_CONFIG } from './features/seanhaddock/app-config';
-import { initializeAppFactory, MY_APP_CONFIG } from './features/seanhaddock/initialize-app.factory';
+import { ENV_CONFIG } from './features/seanhaddock/app-config';
+import { initializeAppFactory, MY_ENV_CONFIG } from './features/seanhaddock/initialize-app.factory';
 
 
 export const appConfig: ApplicationConfig = {
@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
       deps: [HttpClient],
       multi: false,
     },
-    { provide: APP_CONFIG, useValue: MY_APP_CONFIG },
+    { provide: ENV_CONFIG, useValue: MY_ENV_CONFIG },
 
 
 //    provideHttpClient(withInterceptors([authInterceptor])),

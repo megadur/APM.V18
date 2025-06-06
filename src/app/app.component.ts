@@ -6,7 +6,7 @@ import {
   RouterModule,
   RouterOutlet,
 } from '@angular/router';
-import { APP_CONFIG } from './features/seanhaddock/app-config';
+import { ENV_CONFIG } from './features/seanhaddock/app-config';
 
 @Component({
   selector: 'app-root',
@@ -25,5 +25,5 @@ import { APP_CONFIG } from './features/seanhaddock/app-config';
 export class AppComponent {
   title = 'Acme Product Management';
   pageTitle = 'Acme Product Management';
-  appConfig = inject(APP_CONFIG);
+  appConfig = inject(ENV_CONFIG);
 }
