@@ -13,11 +13,15 @@ export function createGutachterDto() {
         organisation: { id: 1, orgId: 'org-123', adresse: {} },
         rolle: ['gutachter'],
         lanr: '123456789',
-        kontakt: { typ: 'Email', wert: '', anmerkung: '' },
+        kontakt: [{ typ: 'Email', wert: '', anmerkung: '' }],
         fachrichtung: undefined,
         adressen: [],
         nutzerstatus: GutachterDto.NutzerstatusEnum.Aktiviert,
         nutzerstatusText: null,
+        geburtsdatum: '', // or a valid date string
+        userId: '', // or a valid user id
+        rollen: [], // or appropriate roles array
+        profiltyp: GutachterDto.ProfiltypEnum.Gutachter, // or another valid ProfiltypEnum value
     } as GutachterDto;
     const mockGutachter: GutachterDto = newLocal;
     return mockGutachter;

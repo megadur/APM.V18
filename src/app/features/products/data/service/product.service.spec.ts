@@ -48,7 +48,7 @@ describe('ProductService', () => {
     it('should return expected product (getProduct)', (done) => {
         const product = mockProducts[0];
         httpClientSpy.get.and.returnValue(of(product));
-        service.getProduct(product.id).subscribe(result => {
+        service.getProduct(product.id!).subscribe(result => {
             expect(result).toEqual(product);
             done();
         });

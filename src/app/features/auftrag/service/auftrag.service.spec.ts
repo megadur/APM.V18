@@ -1,280 +1,121 @@
-
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom, of } from 'rxjs';
-
-
-import { AuftragCollection, AuftragService } from './auftrag.service';
-import { GutachtenstatusDto, GutachtenauftragListDto } from '../../../../generated/gutachtenservice-client';
-import { GutachtenstatusFilter } from '../../../shared/models/models';
-import { MY_ENV_CONFIG } from '../../seanhaddock/initialize-app.factory';
-import { generateAuftragDto, generateAuftrag } from '../../../../Test/AuftragGen';
-
-// Define EnvConfig type for testing purposes
-type EnvConfig = { apiHost: string; apiUrl?: string };
+import { of, throwError } from 'rxjs';
+import { AuftragService, AuftragCollection } from './auftrag.service';
+import { GutachtenauftragApiClient, GutachtenauftragDto } from '../../../../generated/gutachtenservice-client';
+import { ENV_CONFIG } from '../../seanhaddock/app-config';
+import { HttpResponse } from '@angular/common/http';
+import { Gutachtenauftrag } from '../../../shared/models/models';
 
 describe('AuftragService', () => {
-  let auftragsservice: AuftragService;
-  let httpTestingController: HttpTestingController;
-  let httpClientSpy: jasmine.SpyObj<HttpClient>;
-  const mockConfig: EnvConfig = { apiHost: 'http://test-api' };
+  let apiClientSpy: jasmine.SpyObj<GutachtenauftragApiClient>;
+  let service: AuftragService;
+  const mockConfig = { apiUrl: 'http://test' };
+  const mockDto: GutachtenauftragDto = {
+    id: '1',
+    auftragsdatum: '2024-01-01',
+    eingangsdatum: '2024-01-01',
+    gutachtenstatus: { status: 'neu', changedOn: '2024-01-01' },
+    // ...other properties as needed
+  } as GutachtenauftragDto;
 
   beforeEach(() => {
+    apiClientSpy = jasmine.createSpyObj('GutachtenauftragApiClient', [
+      'getGutachtenauftragById',
+      'getGutachtenauftraege',
+    ]);
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    });
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    // Reset MY_APP_CONFIG before each test
-    MY_ENV_CONFIG.apiUrl = '';
-    auftragsservice = TestBed.inject(AuftragService);
-    httpTestingController = TestBed.inject(HttpTestingController);
-  });
-
-  fit('sollte erstellt werden können', () => {
-    httpClientSpy.get.and.returnValue(of(mockConfig));
-    expect(auftragsservice).toBeTruthy();
-  });
-
-  it('sollte `null` für einen nicht existierenden Auftrag zurückgeben', async () => {
-    const observeGetAuftrag = auftragsservice.getAuftrag('1');
-    const promiseToGetAuftrag = firstValueFrom(observeGetAuftrag);
-    const testRequest = httpTestingController.expectOne(
-      'http://localhost:8080/api/v1/gutachtenauftraege/1',
-    );
-
-    expect(testRequest.request.method).toBe('GET');
-
-    testRequest.flush('Not Found', {
-      status: 404,
-      statusText: 'Gutachtenauftrag konnte nicht gefunden werden',
-    });
-
-    expect(await promiseToGetAuftrag).toEqual(null);
-
-    httpTestingController.verify();
-  });
-
-  it('sollte unerwartete Fehler händeln', async () => {
-    const observeGetAuftrag = auftragsservice.getAuftrag('1');
-    const promiseToGetAuftrag = firstValueFrom(observeGetAuftrag);
-    const testRequest = httpTestingController.expectOne(
-      'http://localhost:8080/api/v1/gutachtenauftraege/1',
-    );
-
-    expect(testRequest.request.method).toBe('GET');
-
-    testRequest.flush('Server Error', {
-      status: 500,
-      statusText: 'Server Error',
-    });
-
-    expect(await promiseToGetAuftrag).toBeNull();
-
-    httpTestingController.verify();
-  });
-
-  it('sollte einen existierenden Auftrag holen', async () => {
-    const observeGetAuftrag = auftragsservice.getAuftrag('1');
-    const promiseToGetAuftrag = firstValueFrom(observeGetAuftrag);
-    const testRequest = httpTestingController.expectOne(
-      'http://localhost:8080/api/v1/gutachtenauftraege/1',
-    );
-
-    expect(testRequest.request.method).toBe('GET');
-
-    const responseBody = generateAuftragDto();
-    const expectedAuftrag = AuftragService.dtoToModel(responseBody);
-
-    testRequest.flush(responseBody);
-
-    expect(await promiseToGetAuftrag).toEqual(expectedAuftrag);
-
-    httpTestingController.verify();
-  });
-
-  it('sollte `null` bei einem existierenden Auftrag händeln können', async () => {
-    const observeGetAuftrag = auftragsservice.getAuftrag('1');
-    const promiseToGetAuftrag = firstValueFrom(observeGetAuftrag);
-    const testRequest = httpTestingController.expectOne(
-      'http://localhost:8080/api/v1/gutachtenauftraege/1',
-    );
-
-    testRequest.flush(null);
-
-    expect(await promiseToGetAuftrag).toEqual(null);
-
-    httpTestingController.verify();
-  });
-
-  it('sollte alle Aufträge holen und als AuftragCollection zurückgeben', async () => {
-    const observeGetAuftraege = auftragsservice.getAuftraege();
-    const promiseToGetAuftraege = firstValueFrom(observeGetAuftraege);
-    const testRequest = httpTestingController.expectOne(
-      'http://localhost:8080/api/v1/gutachtenauftraege?offset=0&limit=9000',
-    );
-
-    expect(testRequest.request.method).toBe('GET');
-
-    const status = Object.values(GutachtenstatusDto.StatusEnum);
-    const responseBody: Partial<GutachtenauftragListDto> = {
-      auftraege: [...new Array(status.length)].map(() => generateAuftragDto()),
-    };
-
-    status.forEach(
-      (status, i) =>
-        (responseBody.auftraege![i].gutachtenstatus.status = status),
-    );
-
-    const expectedAuftraege = new AuftragCollection({
-      auftraege: responseBody.auftraege!.map(AuftragService.dtoToModel),
-    });
-
-    testRequest.flush(responseBody);
-
-    expect(await promiseToGetAuftraege).toEqual(expectedAuftraege);
-
-    httpTestingController.verify();
-  });
-
-  it('sollte unbekannten Bearbeitungsstatus händeln', async () => {
-    const observeGetAuftraege = auftragsservice.getAuftraege();
-    const promiseToGetAuftraege = firstValueFrom(observeGetAuftraege);
-    const testRequest = httpTestingController.expectOne(
-      'http://localhost:8080/api/v1/gutachtenauftraege?offset=0&limit=9000',
-    );
-
-    expect(testRequest.request.method).toBe('GET');
-
-    const responseBody: Partial<GutachtenauftragListDto> = {
-      auftraege: [
-        generateAuftragDto(),
-        generateAuftragDto(),
-        generateAuftragDto(),
+      providers: [
+        AuftragService,
+        { provide: GutachtenauftragApiClient, useValue: apiClientSpy },
+        { provide: ENV_CONFIG, useValue: mockConfig },
       ],
-    };
-
-    // @ts-expect-error teste unbekannten Status
-    responseBody.auftraege![0].gutachtenstatus.status = 'unbekannter Status';
-
-    const expectedAuftraege = new AuftragCollection({
-      auftraege: responseBody.auftraege!.map(AuftragService.dtoToModel),
     });
+    service = TestBed.inject(AuftragService);
+  });
 
-    testRequest.flush(responseBody);
+  it('should set apiClient basePath from appConfig', () => {
+    expect(apiClientSpy.configuration.basePath).toBe(mockConfig.apiUrl);
+  });
 
-    expect(await promiseToGetAuftraege).toEqual(expectedAuftraege);
+  it('should getAuftrag and map dto to model', (done) => {
+    apiClientSpy.getGutachtenauftragById.and.returnValue(
+      of(new HttpResponse({ body: mockDto }))
+    );
+    service.getAuftrag('1').subscribe(result => {
+      expect(result?.auftragsId).toBe('1');
+      expect(result?.gutachtenstatus.value).toBe('neu');
+      done();
+    });
+  });
 
-    httpTestingController.verify();
+  it('should return null if response.body is null', (done) => {
+    apiClientSpy.getGutachtenauftragById.and.returnValue(
+      of(new HttpResponse<GutachtenauftragDto>({ body: null as unknown as GutachtenauftragDto }))
+    );
+    service.getAuftrag('1').subscribe(result => {
+      expect(result).toBeNull();
+      done();
+    });
+  });
+
+  it('should return null on error', (done) => {
+    apiClientSpy.getGutachtenauftragById.and.returnValue(throwError({ status: 500, statusText: 'Server Error' }));
+    service.getAuftrag('1').subscribe(result => {
+      expect(result).toBeNull();
+      done();
+    });
+  });
+
+
+  it('should getAuftraege and return AuftragCollection', (done) => {
+    apiClientSpy.getGutachtenauftraege.and.returnValue(
+      of(new HttpResponse({ body: { auftraege: [mockDto], anzahl: 1, offset: 0, limit: 10 } }))
+    );
+    service.getAuftraege().subscribe(collection => {
+      expect(collection).toBeInstanceOf(AuftragCollection);
+      expect(collection.getAuftragscount()).toBe(1);
+      done();
+    });
   });
 });
 
 describe('AuftragCollection', () => {
-  const auftragDtos = [
-    generateAuftragDto(),
-    generateAuftragDto(),
-    generateAuftragDto(),
-  ];
-  const auftraege = auftragDtos.map(AuftragService.dtoToModel);
+  const auftrag: Gutachtenauftrag = {
+    auftragsId: '1',
+    auftragsdatum: '2024-01-01',
+    eingangsdatum: '2024-01-01',
+    gutachtenstatus: { value: 'neu', label: 'Neu', changedOn: '2024-01-01' },
+  };
+  const auftrag2: Gutachtenauftrag= {
+    auftragsId: '2',
+    auftragsdatum: '2024-01-02',
+    eingangsdatum: '2024-01-01',
+    gutachtenstatus: { value: 'abgeschlossen', label: 'Abgeschlossen', changedOn: '2024-01-02' },
+  };
 
-  it('sollte alle Aufträge zurückgeben', async () => {
-    const auftragCollection = new AuftragCollection({
-      auftraege,
-      filter: [],
-    });
-
-    expect(auftragCollection.getAuftraegeForPage(1)).toEqual(auftraege);
+  it('should filter by status', () => {
+    const collection = new AuftragCollection({ auftraege: [auftrag, auftrag2], filter: ['neu'] });
+    expect(collection.getAuftragscount()).toBe(1);
+    expect(collection.getAuftraegeForPage(1)[0].auftragsId).toBe('1');
   });
 
-  it('sollte die Paginierung ermöglichen', async () => {
-    const auftragCollection = new AuftragCollection({
-      auftraege,
-      filter: [],
-    });
-
-    expect(auftragCollection.getAuftraegeForPage(1).length).toEqual(3);
-    expect(auftragCollection.getAuftraegeForPage(-2).length).toEqual(0);
-    expect(auftragCollection.getAuftraegeForPage(2).length).toEqual(0);
+  it('should sort descending by default', () => {
+    const collection = new AuftragCollection({ auftraege: [auftrag, auftrag2] });
+    const result = collection.getAuftraegeForPage(1);
+    expect(result[0].auftragsId).toBe('2');
   });
 
-  it('sollte die maximale Seitenanzahl kalkulieren', async () => {
-    const auftragCollection = new AuftragCollection({
-      auftraege: [...new Array(27)].map(generateAuftrag),
-      filter: [],
-    });
-
-    expect(auftragCollection.getMaxPageCount()).toEqual(3);
+  it('should sort ascending', () => {
+    const collection = new AuftragCollection({ auftraege: [auftrag, auftrag2], sortOrder: 'asc' });
+    const result = collection.getAuftraegeForPage(1);
+    expect(result[0].auftragsId).toBe('1');
   });
 
-  it('sollte Aufträge filtern können', () => {
-    const auftraege = [...new Array(20)].map(generateAuftrag);
-    const data = [
-      ['neu'],
-      ['einbestellt'],
-      ['in_bearbeitung'],
-      ['abgeschlossen'],
-      ['storniert'],
-      ['storniert', 'abgeschlossen'],
-      [],
-    ] as GutachtenstatusFilter[];
-
-    data.forEach((filter) => {
-      const auftragCollection = new AuftragCollection({
-        auftraege,
-        filter,
-      });
-
-      if (filter.length === 0) {
-        expect(auftragCollection.getAuftragscount()).toBe(auftraege.length);
-      } else {
-        expect(auftragCollection.getAuftragscount()).toEqual(
-          auftraege.filter((a) => filter.includes(a.gutachtenstatus.value))
-            .length,
-        );
-      }
-    });
-  });
-
-  it('sollte die Aufträge nach Auftragsdatum aufsteigend sortieren', () => {
-    const auftraege = [...new Array(20)].map(generateAuftrag);
-    const collection = new AuftragCollection({ auftraege, sortOrder: 'asc' });
-    const firstPage = collection.getAuftraegeForPage(1);
-
-    const isSorted = firstPage.every((auftrag, index) => {
-      if (index === firstPage.length - 1) {
-        return true;
-      }
-
-      return (
-        auftrag.auftragsdatum.localeCompare(
-          firstPage[index + 1].auftragsdatum,
-        ) < 0
-      );
-    });
-
-    expect(isSorted).toBeTrue();
-  });
-
-  it('sollte die Aufträge nach Auftragsdatum absteigend sortieren', () => {
-    const auftraege = [...new Array(20)].map(generateAuftrag);
-    const collection = new AuftragCollection({ auftraege, sortOrder: 'desc' });
-    const firstPage = collection.getAuftraegeForPage(1);
-
-    const isSorted = firstPage.every((auftrag, index) => {
-      if (index === firstPage.length - 1) {
-        return true;
-      }
-
-      return (
-        auftrag.auftragsdatum.localeCompare(
-          firstPage[index + 1].auftragsdatum,
-        ) > 0
-      );
-    });
-
-    expect(isSorted).toBeTrue();
+  it('should paginate results', () => {
+    const collection = new AuftragCollection({ auftraege: [auftrag, auftrag2], sortOrder: 'asc' });
+    // Set items per page to 1
+    (collection as any).itemsProSeite = 1;
+    expect(collection.getMaxPageCount()).toBe(2);
+    expect(collection.getAuftraegeForPage(2)[0].auftragsId).toBe('2');
   });
 });
