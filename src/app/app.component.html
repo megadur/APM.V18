@@ -24,9 +24,20 @@
         >Add Product</a
       >
     </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/project']"
+        >Project</a
+      >
+    </li>
   </ul>
 </nav>
 <h1>Hello, APM.V18</h1>
+{{ enableBetaFeatures ? "Beta Features Enabled" : "Beta Features Disabled" }}
+<p>userServiceUrl:{{userServiceUrl}}</p>
 <div class="container">
   <router-outlet></router-outlet>
 </div>

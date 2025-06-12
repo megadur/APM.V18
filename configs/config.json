@@ -1,0 +1,5 @@
+{
+  "isServed": true,
+  "apiRoot": "http://localhost:8888/server/app",
+  "MyKey": "MyValue"
+}
