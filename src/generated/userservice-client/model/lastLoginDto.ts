@@ -10,23 +10,23 @@
 
 
 /**
- * 
+ * Daten des letztmaligen Anmeldeversuchs
  */
 export interface LastLoginDto { 
     /**
-     * 
+     * IP-Adresse des Nutzers beim letztmaligen Anmeldeversuch
      */
     ipV4: string;
     /**
-     * 
+     * Zeitstempel des letztmaligen Anmeldeversuchs
      */
     loginTimestamp: string;
     /**
-     * 
+     * UserAgent-Header-Wert des Browsers beim letztmaligen Anmeldeversuch
      */
     userAgent: string;
     /**
-     * 
+     * Eigenschaft zur eindeutigen Identfikation des Nutzers (z.B. Zeitzone, Systemschriftarten usw.)
      */
     fingerprint?: string;
 }

@@ -10,9 +10,12 @@
 import { AddresseDto } from './addresseDto';
 
 
+/**
+ * Daten der Organisation
+ */
 export interface OrganisationDto { 
     /**
-     * UUID type
+     * ID der Organisation
      */
     orgId: string;
     /**
@@ -20,7 +23,7 @@ export interface OrganisationDto {
      */
     ik?: string;
     /**
-     * KTAN ist die DRV-uebergreifende eindeutige Nummer des Traegers
+     * KTAN ist die DRV-übergreifende eindeutige Nummer des Trägers
      */
     ktan?: string;
     /**

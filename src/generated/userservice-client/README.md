@@ -2,7 +2,7 @@
 
 API des Userservice.
 
-The version of the OpenAPI document: 1.0.5
+The version of the OpenAPI document: 1.0.7
 
 ## Building
 

@@ -1,13 +1,13 @@
-import { TestBed } from '@angular/core/testing';
-
-import { GutachterService } from './gutachter.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import {
   UserserviceApiClient,
   GutachterDto,
 } from '../../../generated/userservice-client';
-import { of } from 'rxjs';
+import { GutachterService } from './gutachter.service';
+import { createGutachterDto } from './createGutachterDto';
 
 describe('GutachterService', () => {
   let service: GutachterService;

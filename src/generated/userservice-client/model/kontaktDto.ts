@@ -9,10 +9,22 @@
  */
 
 
+/**
+ * Kontaktinformationen des Nutzers oder der Organisation
+ */
 export interface KontaktDto { 
-    typ: KontaktDto.TypEnum;
-    wert: string;
-    anmerkung: string;
+    /**
+     * Typ der Kontaktinformation (Email oder Telefon)
+     */
+    typ?: KontaktDto.TypEnum;
+    /**
+     * Wert der Kontaktinformation (Emailadresse oder Telefonnummer)
+     */
+    wert?: string;
+    /**
+     * Anmerkung zur Kontaktinformation
+     */
+    anmerkung?: string;
 }
 export namespace KontaktDto {
     export const TypEnum = {

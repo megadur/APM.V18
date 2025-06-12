@@ -1,10 +1,7 @@
-import {
-  GutachterDto,
-  KontaktDtoTypEnum,
-  NutzerprofilDtoNutzerstatusEnum,
-} from '../../../../generated/userservice-client';
+
+import { GutachterDto, KontaktDto } from '../../../../generated/userservice-client';
 import { Mapper } from '../../../shared/interfaces/mapper.interface';
-import { Gutachter } from '../../../shared/models/models';
+import { Gutachter, Kontakt } from '../../../shared/models/models';
 
 export class GutachterMapper implements Mapper<Gutachter, GutachterDto> {
   toDto(input: Gutachter): GutachterDto {
@@ -26,14 +23,14 @@ export class GutachterMapper implements Mapper<Gutachter, GutachterDto> {
         adresse: {},
       },
       adressen: input.adressen ? input.adressen : [],
-      rollen: [''],
+      rolle: [''],
       kontakt: {
         typ:
           input.kontakte &&
           input.kontakte.length > 0 &&
           input.kontakte[0].typ !== undefined
-            ? (input.kontakte[0].typ as KontaktDtoTypEnum)
-            : KontaktDtoTypEnum.Email,
+            ? (input.kontakte[0].typ as KontaktDto.TypEnum)
+            : "Email",
         wert:
           input.kontakte && input.kontakte.length > 0
             ? (input.kontakte[0].wert ?? '')
@@ -44,7 +41,8 @@ export class GutachterMapper implements Mapper<Gutachter, GutachterDto> {
             : '',
       },
       letzterLogin: { ipV4: '', loginTimestamp: '', userAgent: '' },
-      nutzerstatus: NutzerprofilDtoNutzerstatusEnum.Aktiviert,
+      nutzerstatus: GutachterDto.NutzerstatusEnum.Aktiviert,
+      zuordnung: [],
     };
   }
   /**
@@ -73,11 +71,11 @@ export class GutachterMapper implements Mapper<Gutachter, GutachterDto> {
       nachname: input.name.nachname,
       titel: input.name.titel,
       vorname: input.name.vorname,
-      rollen: input.rollen.filter((rolle) => rolle == 'gutachter'),
+      rollen: input.rolle.filter((rolle) => rolle == 'gutachter'),
       created: input.letzterLogin?.loginTimestamp,
       lastLogin: input.letzterLogin?.loginTimestamp,
       status:
-        input.nutzerstatus == NutzerprofilDtoNutzerstatusEnum.Aktiviert
+        input.nutzerstatus == GutachterDto.NutzerstatusEnum.Aktiviert
           ? 'active'
           : 'locked',
     };

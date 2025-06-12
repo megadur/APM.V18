@@ -7,11 +7,13 @@ SET ADD_PROP=%ADD_PROP%withInterface=true,
 
 ::SET INFILE="swagger.yaml"
 SET INFILE="userservice.yaml"
+::SET INFILE="gutachten.yaml"
 ::SET INFILE="customer-support.yaml"
 ::SET INFILE="customer-insights.yaml"
 ::SET INFILE="Customer-Credit-API.yaml"
 
 SET OUTFILE="../src/generated/userservice-client"
+::SET OUTFILE="../src/generated/gutachtenservice-client"
 ::SET OUTFILE="../src/generated/arzticlient-client"
 ::SET OUTFILE="../src/generated/customer-support-client"
 ::SET OUTFILE="../src/generated/customer-insights-client"

@@ -16,7 +16,7 @@ import { NameDto } from './nameDto';
 
 
 /**
- * 
+ * Daten des Nutzers vom Profiltyp Gutachter
  */
 export interface GutachterDto { 
     /**
@@ -24,11 +24,7 @@ export interface GutachterDto {
      */
     fachrichtung?: string;
     /**
-     * 
-     */
-    lanr?: string;
-    /**
-     * 
+     * Einheitliche Fortbildungsnummer
      */
     efn?: string;
     /**
@@ -36,34 +32,46 @@ export interface GutachterDto {
      */
     verfuegbarkeit?: any | null;
     /**
-     * 
+     * Zuordnung zu ID des Nutzers in rvSMD
      */
     zuordnung: Array<RvSmdIdDto>;
-    test_rolle?: string;
+    /**
+     * Geburtsdatum des Gutachters
+     */
+    geburtsdatum: string;
+    /**
+     * ID des Nutzers
+     */
+    readonly userId: string;
     organisation: OrganisationDto;
     name: NameDto;
     /**
-     * 
+     * Rollen des Nutzers
      */
-    rolle: Array<string>;
-    /**
-     * 
-     */
+    readonly rollen: Array<string>;
     adressen: Array<AddresseDto>;
-    kontakt: KontaktDto;
-    letzterLogin?: LastLoginDto;
+    kontakt: Array<KontaktDto>;
+    readonly letzterLogin?: LastLoginDto;
     /**
-     * 
+     * Aktivierungsstatus des Nutzers
      */
     readonly nutzerstatus: GutachterDto.NutzerstatusEnum;
     /**
+     * Typ des Nutzerprofils. Zulässige Werte sind \'gutachter\', \'gutachtermitarbeiter\' und \'admin\'.
+     */
+    readonly profiltyp: GutachterDto.ProfiltypEnum;
+    /**
      * 
      */
-    settings?: { [key: string]: string; };
+    readonly settings?: { [key: string]: string; };
     /**
      * Link zum Avatar oder Default-Avatar
      */
     readonly avatar?: string;
+    /**
+     * Zeitstempel der Sperrung
+     */
+    gesperrtSeit?: string;
 }
 export namespace GutachterDto {
     export const NutzerstatusEnum = {
@@ -73,6 +81,12 @@ export namespace GutachterDto {
         Gesperrt: 'gesperrt'
     } as const;
     export type NutzerstatusEnum = typeof NutzerstatusEnum[keyof typeof NutzerstatusEnum];
+    export const ProfiltypEnum = {
+        Gutachter: 'gutachter',
+        Gutachtermitarbeiter: 'gutachtermitarbeiter',
+        Admin: 'admin'
+    } as const;
+    export type ProfiltypEnum = typeof ProfiltypEnum[keyof typeof ProfiltypEnum];
 }
 
 

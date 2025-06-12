@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
   title: UserService
-  version: 1.0.5
+  version: 1.0.7
   description: API des Userservice.
 servers:
   - url: http://localhost:9000/api/v1
 paths:
-  /users/info:
+  /user/info:
     get:
       parameters:
         - in: header
@@ -27,12 +27,21 @@ paths:
                   - $ref: "#/components/schemas/GutachterDto"
                   - $ref: "#/components/schemas/GutachtermitarbeiterDto"
                   - $ref: "#/components/schemas/AdminDto"
+                discriminator:
+                  propertyName: profiltyp
+                  mapping:
+                    gutachter: "#/components/schemas/GutachterDto"
+                    gutachtermitarbeiter: "#/components/schemas/GutachtermitarbeiterDto"
+                    admin: "#/components/schemas/AdminDto"
           description: "OK"
+        "404":
+          $ref: "#/components/responses/User_Not_Found"
+          # kann passieren, gültiger token, aber benutzer nicht vorhanden
       security:
         - BearerAuth: []
       operationId: getUserInfo
-      description: ...
-  /users/activated:
+      summary: Gibt das Nutzerprofil-Objekt zurück
+  /user/link:
     get:
       tags:
         - Userservice
@@ -49,11 +58,15 @@ paths:
               schema:
                 type: boolean
           description: OK
+        "403":
+          $ref: "#/components/responses/User_Not_Allowed"
+        "404":
+          $ref: "#/components/responses/User_Not_Found"
       security:
         - BearerAuth: []
       operationId: activateUser
-      description: ...
-  /users:
+      summary: Verknüpft das im UserService angelegte Nutzerprofil mit den durch KeyCloak bereitgestellten Nutzerdaten. (Relevant bei Verwendung von KeyCloak.)
+  /user:
     put:
       requestBody:
         content:
@@ -67,14 +80,237 @@ paths:
       responses:
         "200":
           description: OK
+        "403":
+          $ref: "#/components/responses/User_Not_Allowed"
+        "404":
+          $ref: "#/components/responses/User_Not_Found"
       security:
         - BearerAuth: []
       operationId: updateUser
-      description: ...
+      summary: Aktualisiert ein Nutzerprofil
+  /user/avatar:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      tags:
+        - Userservice
+      responses:
+        "200":
+          description: OK
+        "403":
+          $ref: "#/components/responses/User_Not_Allowed"
+        "404":
+          $ref: "#/components/responses/User_Not_Found"
+      security:
+        - BearerAuth: []
+      operationId: updateUserAvatar
+      summary: Aktualisiert den Link zum Avatar
+  /user/einstellungen:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/EinstellungDto"
+      tags:
+        - Userservice
+      responses:
+        "200":
+          description: OK
+        "403":
+          $ref: "#/components/responses/User_Not_Allowed"
+        "404":
+          $ref: "#/components/responses/User_Not_Found"
+      security:
+        - BearerAuth: []
+      operationId: updateUserConfiguration
+      summary: Aktualisiert die Einstellungen des Nutzerprofil
 components:
   schemas:
+    EinstellungDto:
+      description: ""
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        key: value
+    NutzerprofilDto:
+      description: ""
+      required:
+        - userId
+        - organisation
+        - name
+        - rollen
+        - adressen
+        - kontakt
+        - nutzerstatus
+        - profiltyp
+      type: object
+      properties:
+        userId:
+          description: ID des Nutzers
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+          readOnly: true
+        organisation:
+          $ref: "#/components/schemas/OrganisationDto"
+        name:
+          $ref: "#/components/schemas/NameDto"
+        rollen:
+          allOf:
+            - $ref: "#/components/schemas/Rollen"
+          readOnly: true
+          # sollte nicht aus der rest-api aus aktualisierbar sein
+        adressen:
+          type: array
+          items:
+            $ref: "#/components/schemas/AddresseDto"
+        kontakt:
+          type: array
+          items:
+            $ref: "#/components/schemas/KontaktDto"
+          minItems: 2
+        letzterLogin:
+          allOf:
+            - $ref: "#/components/schemas/LastLoginDto"
+          readOnly: true
+          # braucht nicht aus der rest-api aus aktualisierbar sein
+        nutzerstatus:
+          type: string
+          enum:
+            - angelegt
+            - emails_verifiziert
+            - aktiviert
+            - gesperrt
+          readOnly: true
+          description: "Aktivierungsstatus des Nutzers"
+          example: emails_verifiziert
+        profiltyp:
+          type: string
+          enum:
+            - gutachter
+            - gutachtermitarbeiter
+            - admin
+          readOnly: true
+          description: "Typ des Nutzerprofils. Zulässige Werte sind 'gutachter', 'gutachtermitarbeiter' und 'admin'."
+          example: gutachter
+        settings:
+          allOf:
+            - $ref: "#/components/schemas/EinstellungDto"
+          readOnly: true
+        avatar:
+          type: string
+          readOnly: true
+          description: Link zum Avatar oder Default-Avatar
+        gesperrtSeit:
+          type: string
+          format: date-time
+          description: "Zeitstempel der Sperrung"
+          example: "2025-03-10T12:30:12Z"
+    LastLoginDto:
+      description: "Daten des letztmaligen Anmeldeversuchs"
+      required:
+        - ipV4
+        - loginTimestamp
+        - userAgent
+      type: object
+      properties:
+        ipV4:
+          type: string
+          description: "IP-Adresse des Nutzers beim letztmaligen Anmeldeversuch"
+          example: "197.168.0.1"
+        loginTimestamp:
+          type: string
+          format: date-time
+          description: "Zeitstempel des letztmaligen Anmeldeversuchs"
+          example: "2025-03-10T12:30:12Z"
+        userAgent:
+          type: string
+          description: "UserAgent-Header-Wert des Browsers beim letztmaligen Anmeldeversuch"
+          example: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+        fingerprint:
+          type: string
+          description: "Eigenschaft zur eindeutigen Identfikation des Nutzers (z.B. Zeitzone, Systemschriftarten usw.)"
+          example: "cca058bc5e74464bcd4a15ec5b5b10f4"
+    RvSmdIdDto:
+      description: "Idendifikatisdaten des Nutzers in rvSMD"
+      type: object
+      required:
+        - ktan
+        - gutachterId
+      properties:
+        ktan:
+          type: string
+          description: "Identifikation des Kostenträgers (Abkürzung für Kontoführende Versicherungsanstalt)"
+          example: "R70"
+        gutachterId:
+          type: string
+          description: ID des Nutzers in rvSMD
+    GutachterDto:
+      description: "Daten des Nutzers vom Profiltyp Gutachter"
+      allOf:
+        - $ref: "#/components/schemas/NutzerprofilDto"
+      properties:
+        fachrichtung:
+          description: ""
+          type: string
+        efn:
+          type: string
+          description: "Einheitliche Fortbildungsnummer"
+          example: 802767891234568
+        verfuegbarkeit:
+          description: schema fuer Verfuegbarkeit muss noch angelegt werden
+        zuordnung:
+          type: array
+          items:
+            $ref: "#/components/schemas/RvSmdIdDto"
+          minItems: 1
+          description: "Zuordnung zu ID des Nutzers in rvSMD"
+        geburtsdatum:
+          type: string
+          format: date
+          description: Geburtsdatum des Gutachters
+          example: "2025-03-10"
+      required:
+        - zuordnung
+        - geburtsdatum
+    GutachtermitarbeiterDto:
+      description: "Daten des Nutzers vom Profiltyp Gutachtermitarbeiter"
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/NutzerprofilDto"
+    AdminDto:
+      description: "Daten des Nutzers vom Profiltyp Admin"
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/NutzerprofilDto"
+    KontaktDto:
+      type: object
+      description: "Kontaktinformationen des Nutzers oder der Organisation"
+      properties:
+        typ:
+          type: string
+          enum:
+            - Email
+            - Telefon
+          description: Typ der Kontaktinformation (Email oder Telefon)
+          example: Email
+        wert:
+          type: string
+          description: Wert der Kontaktinformation (Emailadresse oder Telefonnummer)
+          example: gutachter@praxis.de
+        anmerkung:
+          type: string
+          description: Anmerkung zur Kontaktinformation
+          example: primary
     AddresseDto:
       type: object
+      description: "Adressinformationen des Nutzers oder der Organisation"
       properties:
         strasse:
           type: string
@@ -97,64 +333,24 @@ components:
         land:
           type: string
           example: Schlaraffenland
-    EinstellungDto:
-      description: ""
-      type: object
-      additionalProperties:
-        type: string
-      example:
-        key: value
-    NameDto:
-      description: ""
-      required:
-        - nachname
-        - vorname
-      type: object
-      properties:
-        nachname:
-          type: string
-        vorname:
-          type: string
-        anrede:
-          type: string
-        titel:
-          type: string
-        namenszusatz:
-          type: string
-    KontaktDto:
-      type: object
-      required:
-        - typ
-        - wert
-        - anmerkung
-      properties:
-        typ:
-          type: string
-          enum:
-            - Email
-            - Telefon
-          example: Email
-        wert:
-          type: string
-          example: gutachter@praxis.de
-        anmerkung:
-          type: string
-          example: primary
     OrganisationDto:
       type: object
+      description: "Daten der Organisation"
       required:
         - orgId
         - adresse
       properties:
         orgId:
-          $ref: "#/components/schemas/UUID"
+          description: ID der Organisation
+          allOf:
+            - $ref: "#/components/schemas/UUID"
         ik:
           type: string
           description: IK-Nummer der Organisation
           example: "222222228"
         ktan:
           type: string
-          description: KTAN ist die DRV-uebergreifende eindeutige Nummer des Traegers
+          description: KTAN ist die DRV-übergreifende eindeutige Nummer des Trägers
           example: "70"
         institutionsname1:
           type: string
@@ -166,137 +362,73 @@ components:
           type: string
         adresse:
           $ref: "#/components/schemas/AddresseDto"
-    NutzerprofilDto:
-      description: ""
+    NameDto:
       required:
-        - organisation
-        - name
-        - rolle
-        - adressen
-        - kontakt
-        - nutzerstatus
+        - nachname
+        - vorname
       type: object
       properties:
-        test_rolle:
+        nachname:
           type: string
-        organisation:
-          $ref: "#/components/schemas/OrganisationDto"
-          description: ""
-        name:
-          $ref: "#/components/schemas/NameDto"
-          description: ""
-        rolle:
-          description: ""
-          items:
-            type: string
-        adressen:
-          description: ""
-          type: array
-          items:
-            $ref: "#/components/schemas/AddresseDto"
-        kontakt:
-          $ref: "#/components/schemas/KontaktDto"
-          description: ""
-        letzterLogin:
-          $ref: "#/components/schemas/LastLoginDto"
-          readOnly: true
-          description: ""
-        nutzerstatus:
+          example: "Meyer"
+        vorname:
           type: string
-          enum:
-            - angelegt
-            - emails_verifiziert
-            - aktiviert
-            - gesperrt
-          readOnly: true
-          description: ""
-        settings:
-          $ref: "#/components/schemas/EinstellungDto"
-          description: ""
-        avatar:
+          example: "Rudolf"
+        anrede:
           type: string
-          readOnly: true
-          description: Link zum Avatar oder Default-Avatar
-    LastLoginDto:
-      description: ""
-      required:
-        - ipV4
-        - loginTimestamp
-        - userAgent
+          enum: [Herr, Frau, Divers]
+          example: "Herr"
+        titel:
+          type: string
+          example: "Prof. Dr."
+        namenszusatz:
+          type: string
+          example: "von und zu"
+      description: "Namensinformationen des Nutzers"
+    ErrorResponseDto:
       type: object
       properties:
-        ipV4:
+        code:
+          description: Error Code
+          type: integer
+          example: 5000
+        message:
           type: string
-          description: ""
-        loginTimestamp:
-          type: string
-          format: date-time
-          description: ""
-        userAgent:
-          type: string
-          description: ""
-        fingerprint:
-          type: string
-          description: ""
-    RvSmdIdDto:
-      description: ""
-      type: object
-      required:
-        - ktan
-        - gutachterId
-      properties:
-        ktan:
-          type: string
-        gutachterId:
-          type: string
-    GutachterDto:
-      description: ""
-      allOf:
-        - $ref: "#/components/schemas/NutzerprofilDto"
-      properties:
-        fachrichtung:
-          description: ""
-          type: string
-        lanr:
-          description: ""
-          type: string
-        efn:
-          description: ""
-          type: string
-        verfuegbarkeit:
-          description: schema fuer Verfuegbarkeit muss noch angelegt werden
-        zuordnung:
-          type: array
-          items:
-            $ref: "#/components/schemas/RvSmdIdDto"
-          minItems: 1
-          description: ""
-      required:
-        - zuordnung
-    GutachtermitarbeiterDto:
-      description: ""
-      allOf:
-        - $ref: "#/components/schemas/NutzerprofilDto"
-        - type: object
-    AdminDto:
-      description: ""
-      type: object
-      allOf:
-        - $ref: "#/components/schemas/NutzerprofilDto"
-        - type: object
+          description: Error Message
+          example: Anfrage ungültig
+        httpCode:
+          type: integer
+          description: http Return code
+          example: 404
+    Rollen:
+      description: "Rollen des Nutzers"
+      type: array
+      items:
+        type: string
     UUID:
-      description: UUID type
+      description: UUID simple type
       type: string
       format: uuid
       example: 7ca85f64-5717-4562-a3fc-2c963f66afa8
-  parameters:
-    userId:
-      name: userId
-      description: The userId as uuid
-      schema:
-        $ref: "#/components/schemas/UUID"
-      in: query
-      required: true
+  responses:
+    User_Not_Authorized:
+      description: User ist nicht authentifiziert.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseDto"
+    User_Not_Allowed:
+      description: User ist für die indendierte Aktion nicht berechtigt.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseDto"
+    User_Not_Found:
+      description: User nicht gefunden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponseDto"
   securitySchemes:
     BearerAuth:
       scheme: bearer

@@ -10,13 +10,22 @@
 
 
 /**
- * 
+ * Namensinformationen des Nutzers
  */
 export interface NameDto { 
     nachname: string;
     vorname: string;
-    anrede?: string;
+    anrede?: NameDto.AnredeEnum;
     titel?: string;
     namenszusatz?: string;
 }
+export namespace NameDto {
+    export const AnredeEnum = {
+        Herr: 'Herr',
+        Frau: 'Frau',
+        Divers: 'Divers'
+    } as const;
+    export type AnredeEnum = typeof AnredeEnum[keyof typeof AnredeEnum];
+}
+
 

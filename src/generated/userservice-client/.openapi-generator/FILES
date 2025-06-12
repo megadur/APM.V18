@@ -11,6 +11,7 @@ git_push.sh
 index.ts
 model/addresseDto.ts
 model/adminDto.ts
+model/errorResponseDto.ts
 model/getUserInfo200Response.ts
 model/gutachterDto.ts
 model/gutachtermitarbeiterDto.ts

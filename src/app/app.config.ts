@@ -2,7 +2,11 @@ import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneCha
 import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './features/products/data/product-data';
 import { provideLogger } from './shared/util-logger';
@@ -18,10 +22,12 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes,
       withPreloading(PreloadAllModules),
-    //  withDebugTracing(),
+      //  withDebugTracing(),
     ),
     provideHttpClient(),
-    importProvidersFrom(InMemoryWebApiModule.forRoot(ProductData, { delay: 1000 })),
+    importProvidersFrom(
+      InMemoryWebApiModule.forRoot(ProductData, { delay: 1000 }),
+    ),
     provideLogger(loggerConfig),
     // ConfigEnvService,
     // {
@@ -43,7 +49,6 @@ export const appConfig: ApplicationConfig = {
       multi: true
     },
 
-//    provideHttpClient(withInterceptors([authInterceptor])),
-
-  ]
+    //    provideHttpClient(withInterceptors([authInterceptor])),
+  ],
 };

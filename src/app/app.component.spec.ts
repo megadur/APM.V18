@@ -25,7 +25,7 @@ describe('AppComponent', () => {
   it(`should have the 'APM.V18' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('APM.V18');
+    expect(app.title).toEqual('Acme Product Management');
   });
 
   it('should render title', () => {
@@ -35,5 +35,17 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('h1')?.textContent).toContain(
       'Hello, APM.V18',
     );
+  });
+
+  it('should have the correct pageTitle', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.pageTitle).toBe('Acme Product Management');
+  });
+
+  it('should inject appConfig', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.appConfig).toBeDefined();
   });
 });

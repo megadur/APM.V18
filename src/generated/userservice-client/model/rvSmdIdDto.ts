@@ -10,10 +10,16 @@
 
 
 /**
- * 
+ * Idendifikatisdaten des Nutzers in rvSMD
  */
 export interface RvSmdIdDto { 
+    /**
+     * Identifikation des Kostenträgers (Abkürzung für Kontoführende Versicherungsanstalt)
+     */
     ktan: string;
+    /**
+     * ID des Nutzers in rvSMD
+     */
     gutachterId: string;
 }
 

@@ -18,31 +18,39 @@ import { NameDto } from './nameDto';
  * 
  */
 export interface NutzerprofilDto { 
-    test_rolle?: string;
+    /**
+     * ID des Nutzers
+     */
+    readonly userId: string;
     organisation: OrganisationDto;
     name: NameDto;
     /**
-     * 
+     * Rollen des Nutzers
      */
-    rolle: Array<string>;
-    /**
-     * 
-     */
+    readonly rollen: Array<string>;
     adressen: Array<AddresseDto>;
-    kontakt: KontaktDto;
-    letzterLogin?: LastLoginDto;
+    kontakt: Array<KontaktDto>;
+    readonly letzterLogin?: LastLoginDto;
     /**
-     * 
+     * Aktivierungsstatus des Nutzers
      */
     readonly nutzerstatus: NutzerprofilDto.NutzerstatusEnum;
     /**
+     * Typ des Nutzerprofils. Zulässige Werte sind \'gutachter\', \'gutachtermitarbeiter\' und \'admin\'.
+     */
+    readonly profiltyp: NutzerprofilDto.ProfiltypEnum;
+    /**
      * 
      */
-    settings?: { [key: string]: string; };
+    readonly settings?: { [key: string]: string; };
     /**
      * Link zum Avatar oder Default-Avatar
      */
     readonly avatar?: string;
+    /**
+     * Zeitstempel der Sperrung
+     */
+    gesperrtSeit?: string;
 }
 export namespace NutzerprofilDto {
     export const NutzerstatusEnum = {
@@ -52,6 +60,12 @@ export namespace NutzerprofilDto {
         Gesperrt: 'gesperrt'
     } as const;
     export type NutzerstatusEnum = typeof NutzerstatusEnum[keyof typeof NutzerstatusEnum];
+    export const ProfiltypEnum = {
+        Gutachter: 'gutachter',
+        Gutachtermitarbeiter: 'gutachtermitarbeiter',
+        Admin: 'admin'
+    } as const;
+    export type ProfiltypEnum = typeof ProfiltypEnum[keyof typeof ProfiltypEnum];
 }
 
 
