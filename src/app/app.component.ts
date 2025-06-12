@@ -8,11 +8,9 @@ import { AppConfigService } from './core/SaikiranHegde/app.config.service';
   selector: 'app-root',
   standalone: true,
   imports: [
-  imports: [
     RouterLinkActive,
     CommonModule,
     RouterModule,
-    RouterLink,
     RouterLink,
     //ProductModule,
     RouterOutlet,
