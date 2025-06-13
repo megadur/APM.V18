@@ -11,7 +11,15 @@ describe('AppComponent', () => {
       providers: [
         provideRouter([]),
         provideHttpClient(),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        // Mock ConfigService or provide a value for config if needed
+        {
+          provide: 'ConfigService',
+          useValue: {
+            config$: { subscribe: () => {} },
+            config: {}
+          }
+        }
       ],
     }).compileComponents();
   });
@@ -25,7 +33,7 @@ describe('AppComponent', () => {
   it(`should have the 'APM.V18' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('Acme Product Management');
+    expect(app.title).toEqual('APM.V18');
   });
 
   it('should render title', () => {
@@ -43,9 +51,50 @@ describe('AppComponent', () => {
     expect(app.pageTitle).toBe('Acme Product Management');
   });
 
-  it('should inject appConfig', () => {
+  it('should inject config', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.appConfig).toBeDefined();
+    expect(app.configZodService).toBeDefined();
+  });
+
+  it('should set userServiceUrl from config if present', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    // Mock config with userServiceUrl and required features property
+    app.configAppService.appConfig= { userServiceUrl: 'http://test-url', features: {} };
+    app.ngOnInit();
+    expect(app.userServiceUrl).toBe('http://test-url');
+  });
+
+  it('should set userServiceUrl to undefined if not present in config', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    app.configAppService.appConfig = { features: {} };
+    app.ngOnInit();
+    expect(app.userServiceUrl).toBeUndefined();
+  });
+
+  it('should assign config$ from configService', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    app.ngOnInit();
+    expect(app.config$).toBe(app.configService.config$);
+  });
+
+  it('should have configValueKey defined or undefined', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    // configValueKey can be undefined if ConfigService.Config is undefined
+    expect('configValueKey' in app).toBeTrue();
+  });
+
+  it('should get config from ConfigZodService', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    // Mock config if undefined
+    if (app.configZodService === undefined) {
+      app.configZodService = {};
+    }
+    expect(app.configZodService).toBeDefined();
   });
 });

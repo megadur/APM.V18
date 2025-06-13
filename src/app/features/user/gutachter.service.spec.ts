@@ -13,26 +13,7 @@ describe('GutachterService', () => {
   let service: GutachterService;
   let userserviceClientSpy: jasmine.SpyObj<UserserviceApiClient>;
 
-  const mockGutachter: GutachterDto = {
-    id: 1,
-    name: { nachname: 'Test Gutachter', vorname: 'Max' },
-    zuordnung: [],
-    organisation: {
-      orgId: '1',
-      adresse: {},
-      name: 'Test Organisation',
-    },
-    lanr: '123456789',
-    rolle: ['gutachter'],
-    kontakt: {
-      typ: 'Email',
-      wert: '',
-      anmerkung: '',
-    },
-    fachrichtung: undefined,
-    adressen: [],
-    nutzerstatus: 'angelegt',
-  } as GutachterDto;
+  const mockGutachter: GutachterDto = createGutachterDto();
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj('UserserviceApiClient', ['getUserInfo']);

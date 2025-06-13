@@ -22,4 +22,17 @@ describe('StarComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should set starWidth correctly on ngOnChanges', () => {
+    component.rating = 4;
+    component.ngOnChanges();
+    expect(component.starWidth).toBe(60);
+  });
+
+  it('should emit ratingClicked event with correct message on onClick', () => {
+    spyOn(component.ratingClicked, 'emit');
+    component.rating = 3;
+    component.onClick();
+    expect(component.ratingClicked.emit).toHaveBeenCalledWith('The rating 3 was clicked!');
+  });
 });

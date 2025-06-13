@@ -4,8 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { GutachtenauftragApiClient, GutachtenauftragDto, GutachtenstatusDto } from '../../../../generated/gutachtenservice-client';
 import { Gutachtenauftrag, GutachtenstatusFilter } from '../../../shared/models/models';
-import { ENV_CONFIG } from '../../seanhaddock/app-config';
-
+import { ENV_CONFIG } from '../../../core/seanhaddock/app-config';
 
 /** Die möglichen Sortierrichtungen */
 export type SortOrder = 'asc' | 'desc';
