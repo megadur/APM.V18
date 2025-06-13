@@ -6,7 +6,7 @@ export const MY_ENV_CONFIG: EnvConfig = {
   apiUrl: '',
 };
 
-export function initializeAppFactory(httpClient: HttpClient): () => Observable<EnvConfig> {
+export function initializeAppConfigFactory(httpClient: HttpClient): () => Observable<EnvConfig> {
   return () =>
    // httpClient.get<AppConfig>('/api/config/getconfig').pipe(
     httpClient.get<EnvConfig>('/assets/app.config.json')

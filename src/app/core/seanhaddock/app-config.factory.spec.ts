@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { initializeAppFactory, MY_ENV_CONFIG } from './initialize-app.factory';
+import { initializeAppConfigFactory, MY_ENV_CONFIG } from './app-config.factory';
 import { EnvConfig } from './app-config';
 
 describe('initializeAppFactory', () => {
@@ -16,7 +16,7 @@ describe('initializeAppFactory', () => {
   it('should fetch config and update MY_APP_CONFIG', (done) => {
     httpClientSpy.get.and.returnValue(of(mockConfig));
 
-    const initializer = initializeAppFactory(httpClientSpy);
+    const initializer = initializeAppConfigFactory(httpClientSpy);
     initializer().subscribe((config) => {
       expect(httpClientSpy.get).toHaveBeenCalledWith('/assets/app.config.json');
       expect(config).toEqual(mockConfig);
@@ -30,7 +30,7 @@ describe('initializeAppFactory', () => {
     (MY_ENV_CONFIG as any).other = 'keepme';
     httpClientSpy.get.and.returnValue(of(mockConfig));
 
-    const initializer = initializeAppFactory(httpClientSpy);
+    const initializer = initializeAppConfigFactory(httpClientSpy);
     initializer().subscribe(() => {
       expect((MY_ENV_CONFIG as any).other).toBe('keepme');
       done();

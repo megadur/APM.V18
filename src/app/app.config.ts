@@ -21,11 +21,10 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { ProductData } from './features/products/data/product-data';
 import { provideLogger } from './shared/util-logger';
 import { loggerConfig } from './logger.config';
-import { ENV_CONFIG } from './features/seanhaddock/app-config';
-import {
-  initializeAppFactory,
-  MY_ENV_CONFIG,
-} from './features/seanhaddock/initialize-app.factory';
+import { ENV_CONFIG } from './core/seanhaddock/app-config';
+import { initializeAppConfigFactory, MY_ENV_CONFIG } from './core/seanhaddock/app-config.factory';
+import { ConfigEnvService } from './core/iamprovidence/config-env/config-env.service';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -48,12 +47,18 @@ export const appConfig: ApplicationConfig = {
     // old
     {
       provide: APP_INITIALIZER,
-      useFactory: (http: HttpClient) => initializeAppFactory(http),
+      useFactory: (http: HttpClient) => initializeAppConfigFactory(http),
       deps: [HttpClient],
       multi: false,
     },
     { provide: ENV_CONFIG, useValue: MY_ENV_CONFIG },
-
+    ConfigEnvService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configEnvService: ConfigEnvService) => () => configEnvService.initialize(),
+      deps: [ConfigEnvService],
+      multi: true
+    }
     //    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
