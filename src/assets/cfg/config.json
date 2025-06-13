@@ -1,0 +1,6 @@
+
+{
+  "apiVersion": "1.0.0",
+  "apiUrl":"/api/",
+  "enableBetaFeatures":true
+}

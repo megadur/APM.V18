@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
-import { ENV_CONFIG } from './features/seanhaddock/app-config';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -10,8 +10,8 @@ describe('AppComponent', () => {
       imports: [AppComponent],
       providers: [
         provideRouter([]),
-        provideHttpClientTesting(),
-        { provide: ENV_CONFIG, useValue: { apiHost: 'apiHost' } }, // Provide a mock or default config object
+        provideHttpClient(),
+        provideHttpClientTesting()
       ],
     }).compileComponents();
   });

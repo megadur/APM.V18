@@ -12,11 +12,30 @@ import { createGutachterDto } from './createGutachterDto';
 describe('GutachterService', () => {
   let service: GutachterService;
   let userserviceClientSpy: jasmine.SpyObj<UserserviceApiClient>;
-  const mockGutachter: GutachterDto = createGutachterDto();
+
+  const mockGutachter: GutachterDto = {
+    id: 1,
+    name: { nachname: 'Test Gutachter', vorname: 'Max' },
+    zuordnung: [],
+    organisation: {
+      orgId: '1',
+      adresse: {},
+      name: 'Test Organisation',
+    },
+    lanr: '123456789',
+    rolle: ['gutachter'],
+    kontakt: {
+      typ: 'Email',
+      wert: '',
+      anmerkung: '',
+    },
+    fachrichtung: undefined,
+    adressen: [],
+    nutzerstatus: 'angelegt',
+  } as GutachterDto;
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj('UserserviceApiClient', ['getUserInfo']);
-    (spy.getUserInfo as jasmine.Spy).and.returnValue(of(mockGutachter));
     TestBed.configureTestingModule({
       providers: [
         GutachterService,
@@ -25,6 +44,8 @@ describe('GutachterService', () => {
         provideHttpClientTesting(),
       ],
     });
+    // Patch the spy to have the correct return type for getUserInfo
+    (spy.getUserInfo as jasmine.Spy).and.returnValue(of(mockGutachter));
     service = TestBed.inject(GutachterService);
     userserviceClientSpy = TestBed.inject(
       UserserviceApiClient,
@@ -36,6 +57,7 @@ describe('GutachterService', () => {
   });
 
   it('should load and cache GutachterDto', async () => {
+    // The spy's return value is already set in beforeEach
     const result = await service.loadGutachter();
     expect(userserviceClientSpy.getUserInfo).toHaveBeenCalledWith('gutachter');
     expect(result).toEqual(mockGutachter);
@@ -45,8 +67,8 @@ describe('GutachterService', () => {
   it('should return null if no GutachterDto is cached', () => {
     expect(service.getCurrentGutachter()).toBeNull();
   });
-
   it('should clear the cached GutachterDto', async () => {
+    // The spy's return value is already set in beforeEach
     await service.loadGutachter();
     expect(service.getCurrentGutachter()).toEqual(mockGutachter);
     service.clearCurrentGutachter();

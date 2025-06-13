@@ -14,9 +14,10 @@ export class ConfigEnvService {
 
   public initialize(): Promise<void> {
       return firstValueFrom(this.httpClient
-          .get<ConfigEnv>('/app/configurations')
+          .get<ConfigEnv>('/configdata/config.json')
           )
           .then(data => {
+            console.log('Config loaded:', data);
               this.config = data;
           });
   }
