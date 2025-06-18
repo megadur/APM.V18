@@ -20,7 +20,6 @@ import { AppConfigService } from './core/SaikiranHegde/app.config.service';
 })
 export class AppComponent implements OnInit {
   enableBetaFeatures: boolean=false;;
-  title = 'APM.V18';
   pageTitle = 'Acme Product Management';
   configEnvService= inject(ConfigEnvService);
   configService= inject(AppConfigService);
