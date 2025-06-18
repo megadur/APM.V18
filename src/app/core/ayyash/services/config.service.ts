@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 
 import { IConfig } from './config.model';
-import { Config } from './config';
+import { Config } from './config.default';
 import { environment } from '../../../../environments/environment';
 
 export const configFactory = (config: ConfigService) => () =>

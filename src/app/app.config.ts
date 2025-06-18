@@ -10,6 +10,18 @@ import {
   withDebugTracing,
   withPreloading,
 } from '@angular/router';
+import {
+  APP_INITIALIZER,
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
+import {
+  PreloadAllModules,
+  provideRouter,
+  withDebugTracing,
+  withPreloading,
+} from '@angular/router';
 
 import { routes } from './app.routes';
 import {
@@ -26,12 +38,18 @@ import {
   configFactory,
   ConfigService,
 } from './core/ayyash/services/config.service';
+import {
+  configFactory,
+  ConfigService,
+} from './core/ayyash/services/config.service';
 import { appLoader } from './core/SaikiranHegde/app.loader';
 import { AppConfigService } from './core/SaikiranHegde/app.config.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(
+      routes,
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),
@@ -56,9 +74,12 @@ export const appConfig: ApplicationConfig = {
       deps: [ConfigService],
     },
     {
+    },
+    {
       provide: APP_INITIALIZER,
       useFactory: appLoader,
       deps: [AppConfigService],
+      multi: true,
       multi: true,
     },
     AppConfigService,

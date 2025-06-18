@@ -2,7 +2,7 @@ import { ConfigService } from './config.service';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { IConfig } from './config.model';
-import { Config } from './config';
+import { Config } from './config.default';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 // filepath: src/app/core/ayyash/services/config.service.test.ts

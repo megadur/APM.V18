@@ -1,16 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { AuftragService, AuftragCollection } from './auftrag.service';
 import {
   GutachtenauftragApiClient,
   GutachtenauftragDto,
 } from '../../../../generated/gutachtenservice-client';
-import { ENV_CONFIG } from '../../seanhaddock/app-config';
+import { AuftragCollection, AuftragService } from './auftrag.service';
 import { HttpResponse } from '@angular/common/http';
 import { Gutachtenauftrag } from '../../../shared/models/models';
-// Import Configuration at the top of the file:
-// import { Configuration } from '../../../../generated/gutachtenservice-client';
 import { Configuration } from '../../../../generated/gutachtenservice-client';
+import { ENV_CONFIG } from '../../../core/seanhaddock/app-config';
 
 describe('AuftragService', () => {
   let apiClientSpy: jasmine.SpyObj<GutachtenauftragApiClient>;
