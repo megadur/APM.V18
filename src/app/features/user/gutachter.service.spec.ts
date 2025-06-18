@@ -1,19 +1,41 @@
+import { of } from 'rxjs';
+
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import {
-  UserserviceApiClient,
-  GutachterDto,
-} from '../../../generated/userservice-client';
-import { GutachterService } from './gutachter.service';
+
+import { GutachterDto, UserserviceApiClient } from '../../../generated/userservice-client';
 import { createGutachterDto } from './createGutachterDto';
+import { GutachterService } from './gutachter.service';
 
 describe('GutachterService', () => {
   let service: GutachterService;
   let userserviceClientSpy: jasmine.SpyObj<UserserviceApiClient>;
 
-  const mockGutachter: GutachterDto = createGutachterDto();
+  const mockGutachter: GutachterDto = {
+    userId: "123",
+    name: { nachname: 'Test Gutachter', vorname: 'Max' },
+    zuordnung: [],
+    organisation: {
+      orgId: '1',
+      adresse: {},
+      name: 'Test Organisation',
+    },
+    lanr: '123456789',
+    rollen: ['gutachter'],
+    kontakt: [{
+      typ: 'Email',
+      wert: '',
+      anmerkung: '',
+    }],
+    fachrichtung: undefined,
+    adressen: [],
+    nutzerstatus: 'angelegt',
+    geburtsdatum: '1990-01-01',
+    anrede: 'Herr',
+    profiltyp: 'gutachter',
+
+  } as GutachterDto;
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj('UserserviceApiClient', ['getUserInfo']);

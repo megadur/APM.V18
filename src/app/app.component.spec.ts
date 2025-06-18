@@ -30,7 +30,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'APM.V18' title`, () => {
+  it(`should have the 'Acme Product Management' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('APM.V18');
@@ -90,6 +90,8 @@ describe('AppComponent', () => {
 
   it('should get config from ConfigZodService', () => {
     const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    // Ensure that userServiceUrl is defined
     const app = fixture.componentInstance;
     // Mock config if undefined
     if (app.configZodService === undefined) {

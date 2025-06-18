@@ -15,7 +15,7 @@ describe('AuftragService', () => {
   let service: AuftragService;
   const mockConfig = { apiUrl: 'http://test' };
   const mockDto: GutachtenauftragDto = {
-    id: '1',
+    auftragsId: '1',
     auftragsdatum: '2024-01-01',
     eingangsdatum: '2024-01-01',
     gutachtenstatus: { status: 'neu', changedOn: '2024-01-01' },
