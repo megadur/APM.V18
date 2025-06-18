@@ -1,0 +1,7 @@
+{
+  "apiUrlGutachten": "https://api.gutachten.com",
+  "apiUrlUser": "https://api.user.com",
+  "xOrgId": "xOrgId",
+  "xUserId": "xUserId",
+  "xGutachterId": "xGutachterId"
+}

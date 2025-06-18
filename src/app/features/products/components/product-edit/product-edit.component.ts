@@ -28,12 +28,12 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
   productForm: FormGroup;
 
   product?: Product;
-  private sub?: Subscription;
+   sub?: Subscription;
 
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
-  private validationMessages: { [key: string]: { [key: string]: string } };
-  private genericValidator: GenericValidator;
+   validationMessages: { [key: string]: { [key: string]: string } };
+   genericValidator: GenericValidator;
 
   get tags(): FormArray {
     return this.productForm?.get('tags') as FormArray;
