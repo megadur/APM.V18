@@ -35,7 +35,7 @@ export class ProductListComponent implements OnInit {
   set listFilter(value: string) {
     this._listFilter = value;
     this.filteredProducts = this.listFilter
-      ? this.performFilter(this.listFilter)
+      ? this.performFilter2(this.listFilter)
       : this.products;
   }
 
@@ -44,14 +44,6 @@ export class ProductListComponent implements OnInit {
   private productService = inject(ProductService);
 
   constructor() {}
-
-  performFilter(filterBy: string): Product[] {
-    filterBy = filterBy.toLocaleLowerCase();
-    return this.products.filter(
-      (product: Product) =>
-        product.productName?.toLocaleLowerCase().indexOf(filterBy) !== -1,
-    );
-  }
 
   // Checks both the product name and tags
   performFilter2(filterBy: string): Product[] {
@@ -69,16 +61,13 @@ export class ProductListComponent implements OnInit {
   toggleImage(): void {
     this.showImage = !this.showImage;
   }
-  ngOnInit1() {
-    this.productService.getProducts().subscribe((products) => {
-      this.products = products;
-    });
-  }
+
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.products = products;
         this.filteredProducts = this.products;
+        this.errorMessage = ''; // Clear error message on success
       },
       error: (err) => (this.errorMessage = err),
     });

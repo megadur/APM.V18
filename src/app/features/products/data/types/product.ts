@@ -7,6 +7,6 @@ export interface Product {
   releaseDate?: string;
   price?: number;
   description?: string;
-  starRating: number;
+  starRating?: number;
   imageUrl?: string;
 }
