@@ -1,55 +1,20 @@
-import {
-  APP_INITIALIZER,
-  ApplicationConfig,
-  importProvidersFrom,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {
-  PreloadAllModules,
-  provideRouter,
-  withDebugTracing,
-  withPreloading,
-} from '@angular/router';
-import {
-  APP_INITIALIZER,
-  ApplicationConfig,
-  importProvidersFrom,
-  provideZoneChangeDetection,
-} from '@angular/core';
-import {
-  PreloadAllModules,
-  provideRouter,
-  withDebugTracing,
-  withPreloading,
-} from '@angular/router';
-
-import { routes } from './app.routes';
-import {
-  HttpClient,
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { ProductData } from './features/products/data/product-data';
-import { provideLogger } from './shared/util-logger';
-import { loggerConfig } from './logger.config';
-import { ConfigEnvService } from './core/iamprovidence/config-env/config-env.service';
-import {
-  configFactory,
-  ConfigService,
-} from './core/ayyash/services/config.service';
-import {
-  configFactory,
-  ConfigService,
-} from './core/ayyash/services/config.service';
-import { appLoader } from './core/SaikiranHegde/app.loader';
-import { AppConfigService } from './core/SaikiranHegde/app.config.service';
+import { provideHttpClient } from "@angular/common/http";
+import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom, APP_INITIALIZER } from "@angular/core";
+import { provideRouter, withPreloading, PreloadAllModules } from "@angular/router";
+import { InMemoryWebApiModule } from "angular-in-memory-web-api";
+import { routes } from "./app.routes";
+import { configFactory } from "./core/config/ayyash/services/config.service";
+import { DrvConfigService } from "./core/config/drv/drv.config.service";
+import { AppConfigService } from "./core/config/SaikiranHegde/app.config.service";
+import { appLoader } from "./core/config/SaikiranHegde/app.loader";
+import { ProductData } from "./features/products/data/product-data";
+import { loggerConfig } from "./logger.config";
+import { provideLogger } from "./shared/util-logger";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(
-      routes,
+
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),
@@ -71,19 +36,16 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: configFactory,
       multi: true,
-      deps: [ConfigService],
-    },
-    {
+      deps: [DrvConfigService],
     },
     {
       provide: APP_INITIALIZER,
       useFactory: appLoader,
       deps: [AppConfigService],
       multi: true,
-      multi: true,
     },
     AppConfigService,
-    ConfigService,
+    DrvConfigService
 
     //    provideHttpClient(withInterceptors([authInterceptor])),
   ],

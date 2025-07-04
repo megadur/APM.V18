@@ -6,12 +6,14 @@ import {
   RouterModule,
   RouterOutlet,
 } from '@angular/router';
-import { ConfigEnvService } from './core/iamprovidence/config-env/config-env.service';
-import { AppConfigService } from './core/SaikiranHegde/app.config.service';
 import { Observable } from 'rxjs';
-import { IConfig } from './core/ayyash/services/config.model';
-import { ConfigService } from './core/ayyash/services/config.service';
-import { ConfigZodService } from './core/zod/config-zod.service';
+import { IConfig } from './core/config/ayyash/services/config.model';
+
+import { ConfigEnvService } from './core/config/iamprovidence/config-env/config-env.service';
+import { AppConfigService } from './core/config/SaikiranHegde/app.config.service';
+import { ConfigZodService } from './core/config/zod/config-zod.service';
+import { ConfigService } from './core/config/ayyash/services/config.service';
+
 
 @Component({
   selector: 'app-root',

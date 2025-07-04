@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
-import { ProjectComponent } from './core/ayyash/project/project.component';
-import { ProjectResolve } from './core/ayyash/services/project.resolve';
+import { ProjectComponent } from './core/config/ayyash/project/project.component';
+import { ProjectResolve } from './core/config/ayyash/services/project.resolve';
 
 export const routes: Routes = [
   { path: 'welcome', component: HomeComponent },

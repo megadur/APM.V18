@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,8 +27,8 @@ export class HeaderComponent {
   statusText = sessionStorage.getItem('statusText')
     ? sessionStorage.getItem('statusText')
     : '';
-
-  constructor(private router: Router) {}
+  router=inject( Router);
+  constructor() {}
 
   /**
    * The function checks if the user is logged in with Keycloak, loads the user profile, and retrieves
