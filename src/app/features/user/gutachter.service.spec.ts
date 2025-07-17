@@ -4,8 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { GutachterDto, UserserviceApiClient } from '../../../generated/userservice-client';
-import { createGutachterDto } from './createGutachterDto';
+import { GutachterDto, UserserviceApiClient } from '../../../api/user/v1';
 import { GutachterService } from './gutachter.service';
 
 describe('GutachterService', () => {

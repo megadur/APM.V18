@@ -13,6 +13,7 @@ import { ConfigEnvService } from './core/config/iamprovidence/config-env/config-
 import { AppConfigService } from './core/config/SaikiranHegde/app.config.service';
 import { ConfigZodService } from './core/config/zod/config-zod.service';
 import { ConfigService } from './core/config/ayyash/services/config.service';
+import { HeaderComponent } from './core/layout/header/header.component';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { ConfigService } from './core/config/ayyash/services/config.service';
     RouterModule,
     RouterLink,
     RouterOutlet,
+    HeaderComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

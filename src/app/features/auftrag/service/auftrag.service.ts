@@ -2,9 +2,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { GutachtenauftragApiClient, GutachtenauftragDto, GutachtenstatusDto } from '../../../../generated/gutachtenservice-client';
 import { Gutachtenauftrag, GutachtenstatusFilter } from '../../../shared/models/models';
-import { ENV_CONFIG } from '../../../core/seanhaddock/app-config';
+import { GutachtenauftragApiClient, GutachtenauftragDto, GutachtenstatusDto } from '../../../../api/gutachtenportal/v1';
+import { ENV_CONFIG } from '../../../core/config/seanhaddock/app-config';
 
 /** Die möglichen Sortierrichtungen */
 export type SortOrder = 'asc' | 'desc';

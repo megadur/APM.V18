@@ -1,14 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import {
-  GutachtenauftragApiClient,
-  GutachtenauftragDto,
-} from '../../../../generated/gutachtenservice-client';
 import { AuftragCollection, AuftragService } from './auftrag.service';
 import { HttpResponse } from '@angular/common/http';
 import { Gutachtenauftrag } from '../../../shared/models/models';
-import { Configuration } from '../../../../generated/gutachtenservice-client';
-import { ENV_CONFIG } from '../../../core/seanhaddock/app-config';
+import { GutachtenauftragApiClient, GutachtenauftragDto, GutachtenportalConfiguration } from '../../../../api/gutachtenportal/v1';
+import { ENV_CONFIG } from '../../../core/config/seanhaddock/app-config';
 
 describe('AuftragService', () => {
   let apiClientSpy: jasmine.SpyObj<GutachtenauftragApiClient>;
@@ -27,7 +23,7 @@ describe('AuftragService', () => {
       'getGutachtenauftragById',
       'getGutachtenauftraege',
     ]);
-    apiClientSpy.configuration = new Configuration({ basePath: '' });
+    apiClientSpy.configuration = new GutachtenportalConfiguration({ basePath: '' });
     TestBed.configureTestingModule({
       providers: [
         AuftragService,

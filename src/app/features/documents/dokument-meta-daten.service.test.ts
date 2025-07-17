@@ -28,49 +28,50 @@ describe('DokumentMetaDatenService', () => {
     };
     apiClientSpy.getAssessmentAttachements.and.returnValue(of(mockResponse));
 
-    service.getDokumentMetaDatenForAuftrag('123', { searchTerm: 'foo', sortOrder: SortOrder.ASC })
+    service.getDokumentMetaDatenForAuftrag('123', { searchTerm: 'foo', sortOrder: 'asc' as SortOrder })
       .subscribe(result => {
-        expect(result).toEqual(jasmine.any(DokumentMetaDatenCollection));
+        expect(result).toBeInstanceOf(DokumentMetaDatenCollection);
         expect((result as DokumentMetaDatenCollection).items.length).toBe(2);
-        expect((result as DokumentMetaDatenCollection).searchTerm).toBe('foo');
-        expect((result as DokumentMetaDatenCollection).sortOrder).toBe(SortOrder.ASC);
+        expect((result as DokumentMetaDatenCollection).getSearchTerm()).toBe('foo');
+        expect((result as DokumentMetaDatenCollection).sortOrder).toBe('asc');
         done();
       });
   });
 
   it('should return null and log error if response body is null', (done) => {
-    const consoleErrorSpy = spyOn(console, 'error');
-    apiClientSpy.getAssessmentAttachements.and.returnValue(of({ body: null }));
+    spyOn(console, 'error');
+    const mockResponse = { body: null };
+    apiClientSpy.getAssessmentAttachements.and.returnValue(of(mockResponse));
 
     service.getDokumentMetaDatenForAuftrag('123').subscribe(result => {
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(console.error).toHaveBeenCalledWith(
         'Body ist null, obwohl es keinen Status Fehler vom Server gab'
       );
       done();
     });
   });
 
-  it('should return null and not log error for 404 error', (done) => {
+  it('should return null and not log error if error status is 404', (done) => {
+    spyOn(console, 'error');
     const error: Partial<HttpErrorResponse> = { status: 404, statusText: 'Not Found' };
-    const consoleErrorSpy = spyOn(console, 'error');
     apiClientSpy.getAssessmentAttachements.and.returnValue(throwError(error));
 
     service.getDokumentMetaDatenForAuftrag('123').subscribe(result => {
       expect(result).toBeNull();
-      expect(consoleErrorSpy).not.toHaveBeenCalled();
+      expect(console.error).not.toHaveBeenCalled();
       done();
     });
   });
 
-  it('should return null and log error for non-404 error', (done) => {
+  it('should return null and log error if error status is not 404', (done) => {
+    spyOn(console, 'error');
     const error: Partial<HttpErrorResponse> = { status: 500, statusText: 'Server Error' };
-    const consoleErrorSpy = spyOn(console, 'error');
     apiClientSpy.getAssessmentAttachements.and.returnValue(throwError(error));
 
     service.getDokumentMetaDatenForAuftrag('123').subscribe(result => {
       expect(result).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(console.error).toHaveBeenCalledWith(
         'Unerwarteter Status Code 500 mit Server Error. Erwarte nur 200 oder 404'
       );
       done();

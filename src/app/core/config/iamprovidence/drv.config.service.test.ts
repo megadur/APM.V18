@@ -1,5 +1,5 @@
-import { DrvConfigService } from './drv.config.service';
-import { ConfigDTO } from './config.dto';
+import { DrvConfigService } from '../drv/drv.config.service';
+import { ConfigDTO } from '../drv/config.dto';
 
 describe('DrvConfigService', () => {
   let service: DrvConfigService;

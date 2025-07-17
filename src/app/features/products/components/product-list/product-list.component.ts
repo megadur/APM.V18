@@ -32,12 +32,15 @@ export class ProductListComponent implements OnInit {
   get listFilter(): string {
     return this._listFilter;
   }
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.filteredProducts = this.listFilter
-      ? this.performFilter2(this.listFilter)
-      : this.products;
-  }
+// In your component (if this is the expected behavior)
+set listFilter(value: string) {
+  this._listFilter = value;
+  // If filteredProducts is empty but products has data, use products as source
+  const sourceArray = this.filteredProducts.length === 0 && this.products.length > 0
+    ? this.products
+    : this.products;
+  this.filteredProducts = this.performFilter2(value);
+}
 
   filteredProducts: Product[] = [];
   products: Product[] = [];
@@ -72,4 +75,5 @@ export class ProductListComponent implements OnInit {
       error: (err) => (this.errorMessage = err),
     });
   }
+
 }

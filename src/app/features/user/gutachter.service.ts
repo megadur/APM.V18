@@ -1,9 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import {
-  UserserviceApiClient,
-  GutachterDto,
-} from '../../../generated/userservice-client';
+
 import { firstValueFrom, Observable } from 'rxjs';
+import { GutachterDto, UserserviceApiClient } from '../../../api/user/v1';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +17,12 @@ export class GutachterService {
    * @param userId The user ID to load.
    */
   async loadGutachter(): Promise<GutachterDto | null> {
-    const response = await this.userserviceClient.getUserInfo('gutachter');
-    response.subscribe((r) => (this.currentGutachterDto = r as GutachterDto));
+    const response = this.userserviceClient.getUserInfo('gutachter');
+    if (response && typeof (response as Observable<GutachterDto>).subscribe === 'function') {
+      (response as Observable<GutachterDto>).subscribe((r: GutachterDto) => (this.currentGutachterDto = r));
+    } else {
+      this.currentGutachterDto = null;
+    }
     console.log(
       'GutachterService: Loaded Gutachter:',
       this.currentGutachterDto,

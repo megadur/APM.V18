@@ -5,6 +5,7 @@ export interface Product {
   productCode?: string;
   tags?: string[];
   releaseDate?: string;
+  category?: string;
   price?: number;
   description?: string;
   starRating?: number;

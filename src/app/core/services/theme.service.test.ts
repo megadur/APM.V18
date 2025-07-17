@@ -33,12 +33,12 @@ describe('ThemeService', () => {
     // Mock document.body.classList
     bodyClassList = {
       classes: new Set<string>(),
-      add: function (...tokens: string[]) { tokens.forEach(t => this.classes.add(t)); },
-      remove: function (...tokens: string[]) { tokens.forEach(t => this.classes.delete(t)); },
-      contains: function (token: string) { return this.classes.has(token); },
+      add: function (this: any, ...tokens: string[]) { tokens.forEach(t => this.classes.add(t)); },
+      remove: function (this: any, ...tokens: string[]) { tokens.forEach(t => this.classes.delete(t)); },
+      contains: function (this: any, token: string) { return this.classes.has(token); },
       get length() { return this.classes.size; },
-      item: function (index: number) { return Array.from(this.classes)[index]; },
-      toggle: function (token: string, force?: boolean) {
+      item: function (this: any, index: number) { return Array.from(this.classes)[index]; },
+      toggle: function (this: any, token: string, force?: boolean) {
         if (force === undefined) {
           if (this.classes.has(token)) this.classes.delete(token);
           else this.classes.add(token);
@@ -48,14 +48,14 @@ describe('ThemeService', () => {
         }
         return this.classes.has(token);
       },
-      forEach: function (callback: (value: string, value2: string, set: Set<string>) => void, thisArg?: any) {
+      forEach: function (this: any, callback: (value: string, value2: string, set: Set<string>) => void, thisArg?: any) {
         this.classes.forEach(callback, thisArg);
       }
-    } as unknown as DOMTokenList;
+    } as any as DOMTokenList;
     spyOnProperty(document, 'body', 'get').and.returnValue({ classList: bodyClassList } as any);
 
     // Mock MutationObserver
-    spyOn(window as any, 'MutationObserver').and.callFake(function (cb: any) {
+    spyOn(window as any, 'MutationObserver').and.callFake(function (this: any, cb: any) {
       this.observe = () => {};
       this.disconnect = () => {};
       this.takeRecords = () => [];
@@ -121,8 +121,8 @@ describe('ThemeService', () => {
     // @ts-ignore
     service['observeAppTheme']();
     // Simulate mutation
-    const observerInstance = (window.MutationObserver as jasmine.Spy).calls.mostRecent().object;
-    observerInstance.cb();
+    const observerInstance = ((window.MutationObserver as unknown) as jasmine.Spy).calls.mostRecent().object;
+    (observerInstance as any).cb();
     expect(window.localStorage.setItem).toHaveBeenCalledWith(THEME_KEYS.STORAGE, THEME_KEYS.CLASSES.DARK);
   });
 
@@ -130,8 +130,8 @@ describe('ThemeService', () => {
     bodyClassList.add(THEME_KEYS.CLASSES.LIGHT);
     // @ts-ignore
     service['observeAppTheme']();
-    const observerInstance = (window.MutationObserver as jasmine.Spy).calls.mostRecent().object;
-    observerInstance.cb();
+    const observerInstance = ((window.MutationObserver as unknown) as jasmine.Spy).calls.mostRecent().object;
+    (observerInstance as any).cb();
     expect(window.localStorage.setItem).toHaveBeenCalledWith(THEME_KEYS.STORAGE, THEME_KEYS.CLASSES.LIGHT);
   });
 });

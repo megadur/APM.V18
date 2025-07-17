@@ -1,4 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+
+// Define the LinklistData interface if not already imported
+export interface LinklistData {
+  // Add properties as needed, for example:
+  id: number;
+  name: string;
+  url?: string;
+}
 
 @Component({
   selector: 'app-dokumentenliste',

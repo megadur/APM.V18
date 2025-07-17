@@ -4,10 +4,10 @@ import {
   provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { environment } from '../../../../environments/environment';
 import { Config } from './config.default';
 import { IConfig } from './config.model';
 import { ConfigService } from './config.service';
+import { environment } from '../../../../../environments/environment';
 
 describe('ConfigServiceSpec', () => {
   let service: ConfigService;

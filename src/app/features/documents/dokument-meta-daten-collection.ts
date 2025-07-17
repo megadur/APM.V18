@@ -1,3 +1,7 @@
+import { DocumentMetadataDto } from "../../../api/gutachtenportal/v1";
+import { Collection, SortOrder } from "../../shared/utils/collection";
+
+
 export class DokumentMetaDatenCollection extends Collection<DocumentMetadataDto> {
   constructor({
     items,

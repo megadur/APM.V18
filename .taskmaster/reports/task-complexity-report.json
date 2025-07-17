@@ -1,0 +1,93 @@
+{
+	"meta": {
+		"generatedAt": "2025-07-17T09:53:42.572Z",
+		"tasksAnalyzed": 10,
+		"totalTasks": 10,
+		"analysisCount": 10,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Create UI/UX Mockup Design",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the UI/UX mockup design into specific interface components: user management screens, assessment order interfaces, carrier configuration panels, dashboard layouts, accessibility compliance implementation, and design system documentation. Each subtask should focus on a distinct interface area with clear deliverables.",
+			"reasoning": "High complexity due to multiple interface requirements, accessibility compliance, responsive design considerations, and stakeholder coordination. Requires design expertise and cross-team collaboration."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Setup Development Environment and Project Structure",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide the development setup into: project initialization and framework selection, build tools and development server configuration, code quality and testing framework setup, and CI/CD pipeline implementation. Each subtask should be independently testable and configurable.",
+			"reasoning": "Moderate complexity involving standard development practices but requiring careful configuration of multiple tools and environments. Well-established patterns exist but customization is needed."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Implement Authentication and Authorization System",
+			"complexityScore": 8,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Split authentication system into: login/logout functionality and JWT management, role-based access control implementation, carrier-specific access restrictions, session management and security policies, and UserService integration with error handling. Each subtask should address a specific security concern.",
+			"reasoning": "High complexity due to security requirements, multiple user types, carrier-specific restrictions, and integration with existing services. Critical for application security and requires thorough testing."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Develop Core Navigation and Layout Components",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down navigation components into: main application shell and header/footer, responsive sidebar navigation with role-based visibility, breadcrumb and routing implementation, mobile-responsive design and accessibility features, and loading states with error boundaries. Each subtask should produce reusable components.",
+			"reasoning": "Moderate-high complexity requiring responsive design, accessibility compliance, and role-based functionality. Foundation for entire application but follows established UI patterns."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Implement User Management Module",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Divide user management into: user listing with search and filtering capabilities, user creation and editing forms with validation, user profile and role management, bulk operations and import/export functionality, user status management and audit logging, and UserService API integration. Each subtask should handle specific CRUD operations.",
+			"reasoning": "High complexity involving comprehensive CRUD operations, data validation, bulk processing, API integration, and audit requirements. Core business functionality with multiple interdependent features."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Develop Assessment Order Management System",
+			"complexityScore": 9,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down assessment order management into: order creation forms with validation, order listing with advanced search and filtering, order status tracking and workflow management, order assignment and assessor management, document management and file upload functionality, order history and audit trail implementation, and bulk operations with reporting features. Each subtask should handle a specific aspect of the order lifecycle.",
+			"reasoning": "Very high complexity as the core business functionality with complex workflows, document management, multiple integrations, and comprehensive lifecycle management. Requires extensive testing and validation."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Create Carrier-Specific Configuration Module",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Split configuration management into: carrier selection and switching interface, configuration forms for carrier-specific settings, template management system for different carriers, workflow and branding configuration options, and import/export functionality with validation. Each subtask should ensure proper multi-tenant isolation.",
+			"reasoning": "Moderate-high complexity due to multi-tenant requirements, configuration management, and security isolation needs. Requires careful design to prevent cross-carrier data access."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Integrate Backend Services and API Connections",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Divide service integration into: API client services and endpoint configuration, error handling and retry mechanisms, data transformation and mapping services, caching strategies and performance optimization, real-time updates via WebSocket/SSE, and external service integration (rvSMD, rvPuR, messaging). Each subtask should handle specific integration concerns.",
+			"reasoning": "High complexity involving multiple external services, real-time functionality, error handling, and performance optimization. Critical for application functionality and requires robust testing."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Implement Security, Accessibility, and Compliance Features",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down compliance implementation into: WCAG 2.1 AA accessibility compliance, GDPR data protection and privacy measures, security headers and CSP policies implementation, input validation and XSS protection, performance optimization and monitoring, and audit trail and logging systems. Each subtask should address specific compliance requirements.",
+			"reasoning": "High complexity due to multiple compliance standards, security requirements, and performance considerations. Requires specialized knowledge and extensive testing across different domains."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Deploy to Production and Create Documentation",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Split deployment and documentation into: production environment setup and SSL configuration, performance monitoring and logging implementation, backup and disaster recovery procedures, comprehensive user and administrator documentation creation, and final acceptance testing with stakeholder sign-off. Each subtask should produce specific deliverables.",
+			"reasoning": "Moderate-high complexity involving production deployment, monitoring setup, comprehensive documentation, and final validation. Requires coordination with multiple teams and thorough testing."
+		}
+	]
+}

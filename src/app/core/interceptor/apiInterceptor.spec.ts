@@ -1,16 +1,5 @@
-import { HttpRequest, HttpHandler, HttpHeaders } from '@angular/common/http';
+import { HttpHandler, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { apiInterceptor } from './apiInterceptor';
-
-// Mock Config import
-// Mock Config import for Jasmine
-const mockApiConfig = {
-  apiUrlGutachten: 'http://real-gutachten/api/v1',
-  apiUrlUser: 'http://real-user/api/v1',
-  xUserId: 'test-user',
-  xOrgId: 'test-org',
-  xGutachterId: 'test-gutachter'
-};
-// If your apiInterceptor imports the config, you may need to mock the module system or refactor apiInterceptor to accept config as a parameter for easier testing.
 
 describe('apiInterceptor', () => {
   let next: jasmine.Spy;

@@ -3,8 +3,8 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 import { apiInterceptor } from './api.interceptor';
 import { HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
-import { AppConfigService } from '../config/SaikiranHegde/app.config.service';
 import { of } from 'rxjs';
+import { AppConfigService } from '../SaikiranHegde/app.config.service';
 
 describe('apiInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) =>
