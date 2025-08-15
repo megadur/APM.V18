@@ -1,19 +1,20 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ConfigZodService } from '../zod/config-zod.service';
+import { ConfigService } from '../config.service';
 
 export const myInterceptor: HttpInterceptorFn = (req, next) => {
-  const config = inject(ConfigZodService).getConfig();
-  let userServiceUrl = '/assets/cfg/config.json';
-  if (req.url !== userServiceUrl && config.apiUrl != undefined) {
-    userServiceUrl = req.url.replace(
-      'http://localhost:8080/api/v1',
-      config.apiUrl,
-    );
+  const config = inject(ConfigService).getConfig();
+  const apiUrl = config.apiUrl;
+
+  // This interceptor replaced a hardcoded localhost URL.
+  // We will replicate that logic with the new config service.
+  const localApiUrl = 'http://localhost:8080/api/v1';
+
+  if (apiUrl && req.url.startsWith(localApiUrl)) {
+    const newUrl = req.url.replace(localApiUrl, apiUrl);
+    const dupReq = req.clone({ url: newUrl });
+    return next(dupReq);
   }
 
-  const dupReq = req.clone({
-    url: userServiceUrl ? userServiceUrl : 'https://default.api.url',
-  });
-  return next(dupReq);
+  return next(req);
 };

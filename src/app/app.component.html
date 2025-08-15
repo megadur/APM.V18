@@ -37,9 +37,12 @@
 </nav>
 <app-header></app-header>
 <h1>Hello, APM.V18</h1>
-{{ enableBetaFeatures ? "Beta Features Enabled" : "Beta Features Disabled" }}
-<p>userServiceUrl: {{userServiceUrl}}</p>
-<p>configValueKey: {{configValueKey}}</p>
+<!-- Updated to use the new 'config' object -->
+<p>
+  Beta Features:
+  {{ config?.enableBetaFeatures ? "Enabled" : "Disabled" }}
+</p>
+<p>User Service URL: {{ config?.userServiceUrl }}</p>
 
 <div class="container">
   <router-outlet></router-outlet>

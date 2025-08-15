@@ -4,37 +4,50 @@ import { AuftragCollection, AuftragService } from './auftrag.service';
 import { HttpResponse } from '@angular/common/http';
 import { Gutachtenauftrag } from '../../../shared/models/models';
 import { GutachtenauftragApiClient, GutachtenauftragDto, GutachtenportalConfiguration } from '../../../../api/gutachtenportal/v1';
-import { ENV_CONFIG } from '../../../core/config/seanhaddock/app-config';
+import { ConfigService } from '../../../core/config/config.service';
+import { AppConfig } from '../../../core/config/config.schema';
 
 describe('AuftragService', () => {
   let apiClientSpy: jasmine.SpyObj<GutachtenauftragApiClient>;
   let service: AuftragService;
-  const mockConfig = { apiUrl: 'http://test' };
+  let mockConfigService: jasmine.SpyObj<ConfigService>;
+
+  const mockConfig: AppConfig = { apiUrl: 'http://test.com/api' };
   const mockDto: GutachtenauftragDto = {
     auftragsId: '1',
     auftragsdatum: '2024-01-01',
     eingangsdatum: '2024-01-01',
     gutachtenstatus: { status: 'neu', changedOn: '2024-01-01' },
-    // ...other properties as needed
   } as GutachtenauftragDto;
 
   beforeEach(() => {
-    apiClientSpy = jasmine.createSpyObj('GutachtenauftragApiClient', [
+    const apiClientSpyObj = jasmine.createSpyObj('GutachtenauftragApiClient', [
       'getGutachtenauftragById',
       'getGutachtenauftraege',
     ]);
-    apiClientSpy.configuration = new GutachtenportalConfiguration({ basePath: '' });
+    // The configuration property needs to be writable for the test
+    apiClientSpyObj.configuration = new GutachtenportalConfiguration({ basePath: '' });
+
+    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['getConfig']);
+
     TestBed.configureTestingModule({
       providers: [
         AuftragService,
-        { provide: GutachtenauftragApiClient, useValue: apiClientSpy },
-        { provide: ENV_CONFIG, useValue: mockConfig },
+        { provide: GutachtenauftragApiClient, useValue: apiClientSpyObj },
+        { provide: ConfigService, useValue: configServiceSpy },
       ],
     });
+
+    apiClientSpy = TestBed.inject(GutachtenauftragApiClient) as jasmine.SpyObj<GutachtenauftragApiClient>;
+    mockConfigService = TestBed.inject(ConfigService) as jasmine.SpyObj<ConfigService>;
+
+    // Provide the mock config before the service is instantiated
+    mockConfigService.getConfig.and.returnValue(mockConfig);
+
     service = TestBed.inject(AuftragService);
   });
 
-  it('should set apiClient basePath from appConfig', () => {
+  it('should set apiClient basePath from the unified ConfigService', () => {
     expect(apiClientSpy.configuration.basePath).toBe(mockConfig.apiUrl);
   });
 
@@ -51,11 +64,7 @@ describe('AuftragService', () => {
 
   it('should return null if response.body is null', (done) => {
     apiClientSpy.getGutachtenauftragById.and.returnValue(
-      of(
-        new HttpResponse<GutachtenauftragDto>({
-          body: null as unknown as GutachtenauftragDto,
-        }),
-      ),
+      of(new HttpResponse({ body: null as any })),
     );
     service.getAuftrag('1').subscribe((result) => {
       expect(result).toBeNull();
@@ -65,7 +74,7 @@ describe('AuftragService', () => {
 
   it('should return null on error', (done) => {
     apiClientSpy.getGutachtenauftragById.and.returnValue(
-      throwError({ status: 500, statusText: 'Server Error' }),
+      throwError(() => new HttpResponse({ status: 500, statusText: 'Server Error' }))
     );
     service.getAuftrag('1').subscribe((result) => {
       expect(result).toBeNull();
@@ -75,11 +84,7 @@ describe('AuftragService', () => {
 
   it('should getAuftraege and return AuftragCollection', (done) => {
     apiClientSpy.getGutachtenauftraege.and.returnValue(
-      of(
-        new HttpResponse({
-          body: { auftraege: [mockDto], anzahl: 1, offset: 0, limit: 10 },
-        }),
-      ),
+      of({ auftraege: [mockDto], anzahl: 1, offset: 0, limit: 10 } as any)
     );
     service.getAuftraege().subscribe((collection) => {
       expect(collection).toBeInstanceOf(AuftragCollection);

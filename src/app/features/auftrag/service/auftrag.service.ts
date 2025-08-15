@@ -1,10 +1,9 @@
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { Gutachtenauftrag, GutachtenstatusFilter } from '../../../shared/models/models';
 import { GutachtenauftragApiClient, GutachtenauftragDto, GutachtenstatusDto } from '../../../../api/gutachtenportal/v1';
-import { ENV_CONFIG } from '../../../core/config/seanhaddock/app-config';
+import { ConfigService } from '../../../core/config/config.service';
 
 /** Die möglichen Sortierrichtungen */
 export type SortOrder = 'asc' | 'desc';
@@ -18,7 +17,10 @@ export type SortOrder = 'asc' | 'desc';
 })
 export class AuftragService {
   static MAX_AUFTRAEGE_PER_PAGE = 10;
-  appConfig = inject(ENV_CONFIG);
+
+  // Inject the new unified ConfigService
+  private configService = inject(ConfigService);
+
   static dtoToModel(auftrag: GutachtenauftragDto): Gutachtenauftrag {
     return {
       ...auftrag,
@@ -33,8 +35,10 @@ export class AuftragService {
   constructor(
     private apiClient: GutachtenauftragApiClient
   ) {
-    this.apiClient.configuration.basePath =
-      this.appConfig.apiUrl;
+    // Set the base path from the unified config
+    const config = this.configService.getConfig();
+    // Prefer the specific URL if available, otherwise fall back to the general one.
+    this.apiClient.configuration.basePath = config.apiUrlGutachten || config.apiUrl;
     console.log('apiUrl:', this.apiClient.configuration.basePath);
   }
 

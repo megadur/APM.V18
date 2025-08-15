@@ -1,102 +1,86 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { ConfigService } from './core/config/config.service';
+import { AppConfig } from './core/config/config.schema';
+import { Component } from '@angular/core';
+
+// Mock HeaderComponent to isolate the AppComponent
+@Component({
+  selector: 'app-header',
+  template: '',
+  standalone: true,
+})
+class MockHeaderComponent {}
 
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let component: AppComponent;
+  let mockConfigService: jasmine.SpyObj<ConfigService>;
+
+  const mockConfig: AppConfig = {
+    apiUrl: 'http://api.test.com',
+    userServiceUrl: 'http://user.test.com',
+    enableBetaFeatures: true,
+  };
+
   beforeEach(async () => {
+    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['getConfig']);
+    configServiceSpy.getConfig.and.returnValue(mockConfig);
+
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [
         provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        // Mock ConfigService or provide a value for config if needed
-        {
-          provide: 'ConfigService',
-          useValue: {
-            config$: { subscribe: () => {} },
-            config: {}
-          }
-        }
+        { provide: ConfigService, useValue: configServiceSpy },
       ],
-    }).compileComponents();
+    })
+    // Override the HeaderComponent to avoid its own dependencies
+    .overrideComponent(AppComponent, {
+      remove: { imports: [MockHeaderComponent] },
+      add: { imports: [MockHeaderComponent] }
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    mockConfigService = TestBed.inject(ConfigService) as jasmine.SpyObj<ConfigService>;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
-  it(`should have the 'Acme Product Management' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('APM.V18');
+  it(`should have the pageTitle 'Acme Product Management'`, () => {
+    expect(component.pageTitle).toEqual('Acme Product Management');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
+  it('should get the config from ConfigService on init', () => {
+    // Act
+    fixture.detectChanges(); // Triggers ngOnInit
+
+    // Assert
+    expect(mockConfigService.getConfig).toHaveBeenCalled();
+    expect(component.config).toEqual(mockConfig);
+  });
+
+  it('should render the user service URL from the config', () => {
+    // Act
+    fixture.detectChanges(); // Triggers ngOnInit and renders the template
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Hello, APM.V18',
-    );
+    const pElement = compiled.querySelector('p:nth-of-type(2)');
+
+    // Assert
+    expect(pElement?.textContent).toContain(`User Service URL: ${mockConfig.userServiceUrl}`);
   });
 
-  it('should have the correct pageTitle', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.pageTitle).toBe('Acme Product Management');
-  });
+  it('should render the beta features status from the config', () => {
+     // Act
+     fixture.detectChanges(); // Triggers ngOnInit and renders the template
+     const compiled = fixture.nativeElement as HTMLElement;
+     const pElement = compiled.querySelector('p:nth-of-type(1)');
 
-  it('should inject config', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.configZodService).toBeDefined();
-  });
-
-  it('should set userServiceUrl from config if present', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    // Mock config with userServiceUrl and required features property
-    app.configAppService.appConfig= { userServiceUrl: 'http://test-url', features: {} };
-    app.ngOnInit();
-    expect(app.userServiceUrl).toBe('http://test-url');
-  });
-
-  it('should set userServiceUrl to undefined if not present in config', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    app.configAppService.appConfig = { features: {} };
-    app.ngOnInit();
-    expect(app.userServiceUrl).toBeUndefined();
-  });
-
-  it('should assign config$ from configService', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    app.ngOnInit();
-    expect(app.config$).toBe(app.configService.config$);
-  });
-
-  it('should have configValueKey defined or undefined', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    // configValueKey can be undefined if ConfigService.Config is undefined
-    expect('configValueKey' in app).toBeTrue();
-  });
-
-  it('should get config from ConfigZodService', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    // Ensure that userServiceUrl is defined
-    const app = fixture.componentInstance;
-    // Mock config if undefined
-    if (app.configZodService === undefined) {
-      app.configZodService = {};
-    }
-    expect(app.configZodService).toBeDefined();
+     // Assert
+     expect(pElement?.textContent).toContain('Beta Features: Enabled');
   });
 });

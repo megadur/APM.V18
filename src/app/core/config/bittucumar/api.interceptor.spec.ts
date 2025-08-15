@@ -1,75 +1,62 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpInterceptorFn } from '@angular/common/http';
-
-import { apiInterceptor } from './api.interceptor';
-import { HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
 import { of } from 'rxjs';
-import { AppConfigService } from '../SaikiranHegde/app.config.service';
+import { apiInterceptor } from './api.interceptor';
+import { ConfigService } from '../config.service';
+import { AppConfig } from '../config.schema';
 
 describe('apiInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) =>
     TestBed.runInInjectionContext(() => apiInterceptor(req, next));
 
+  let mockConfigService: jasmine.SpyObj<ConfigService>;
+
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    // Create a spy object for ConfigService
+    const configServiceSpy = jasmine.createSpyObj('ConfigService', ['getConfig']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: ConfigService, useValue: configServiceSpy }
+      ]
+    });
+
+    mockConfigService = TestBed.inject(ConfigService) as jasmine.SpyObj<ConfigService>;
   });
 
   it('should be created', () => {
+    // Provide a default mock implementation to avoid errors on creation
+    mockConfigService.getConfig.and.returnValue({});
     expect(interceptor).toBeTruthy();
   });
 
-  class MockAppConfigService {
-    appConfig: any = {};
-  }
+  it('should use userServiceUrl from config if present', (done) => {
+    // Arrange
+    const mockConfig: AppConfig = { userServiceUrl: 'https://custom.api.url' };
+    mockConfigService.getConfig.and.returnValue(mockConfig);
+    const req = new HttpRequest('GET', '/api/test');
 
-  describe('apiInterceptor', () => {
-    const interceptor: HttpInterceptorFn = (req, next) =>
-      TestBed.runInInjectionContext(() => apiInterceptor(req, next));
+    // Act
+    const next: HttpHandlerFn = (request) => {
+      // Assert
+      expect(request.url).toBe('https://custom.api.url');
+      return of({} as HttpEvent<any>);
+    };
+    interceptor(req, next).subscribe(() => done());
+  });
 
-    let mockAppConfigService: MockAppConfigService;
+  it('should pass original request if userServiceUrl is not present', (done) => {
+    // Arrange
+    const mockConfig: AppConfig = { apiUrl: 'http://some-other-api.com' }; // No userServiceUrl
+    mockConfigService.getConfig.and.returnValue(mockConfig);
+    const req = new HttpRequest('GET', '/api/test');
 
-    beforeEach(() => {
-      mockAppConfigService = new MockAppConfigService();
-
-      TestBed.configureTestingModule({
-        providers: [
-          { provide: AppConfigService, useValue: mockAppConfigService }
-        ]
-      });
-    });
-
-    it('should be created', () => {
-      expect(interceptor).toBeTruthy();
-    });
-
-    it('should use userServiceUrl from appConfig if present', (done) => {
-      mockAppConfigService.appConfig = { userServiceUrl: 'https://custom.api.url' };
-      const req = new HttpRequest('GET', '/api/test');
-      const next: HttpHandlerFn = (request) => {
-        expect(request.url).toBe('https://custom.api.url');
-        return of({} as HttpEvent<any>);
-      };
-      interceptor(req, next).subscribe(() => done());
-    });
-
-    it('should use default url if userServiceUrl is not present', (done) => {
-      mockAppConfigService.appConfig = {};
-      const req = new HttpRequest('GET', '/api/test');
-      const next: HttpHandlerFn = (request) => {
-        expect(request.url).toBe('https://default.api.url');
-        return of({} as HttpEvent<any>);
-      };
-      interceptor(req, next).subscribe(() => done());
-    });
-
-    it('should use default url if appConfig is undefined', (done) => {
-      mockAppConfigService.appConfig = undefined;
-      const req = new HttpRequest('GET', '/api/test');
-      const next: HttpHandlerFn = (request) => {
-        expect(request.url).toBe('https://default.api.url');
-        return of({} as HttpEvent<any>);
-      };
-      interceptor(req, next).subscribe(() => done());
-    });
+    // Act
+    const next: HttpHandlerFn = (request) => {
+      // Assert
+      expect(request.url).toBe('/api/test'); // The URL should be unchanged
+      return of({} as HttpEvent<any>);
+    };
+    interceptor(req, next).subscribe(() => done());
   });
 });

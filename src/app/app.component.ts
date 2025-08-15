@@ -6,15 +6,9 @@ import {
   RouterModule,
   RouterOutlet,
 } from '@angular/router';
-import { Observable } from 'rxjs';
-import { IConfig } from './core/config/ayyash/services/config.model';
-
-import { ConfigEnvService } from './core/config/iamprovidence/config-env/config-env.service';
-import { AppConfigService } from './core/config/SaikiranHegde/app.config.service';
-import { ConfigZodService } from './core/config/zod/config-zod.service';
-import { ConfigService } from './core/config/ayyash/services/config.service';
 import { HeaderComponent } from './core/layout/header/header.component';
-
+import { ConfigService } from './core/config/config.service';
+import { AppConfig } from './core/config/config.schema';
 
 @Component({
   selector: 'app-root',
@@ -31,31 +25,21 @@ import { HeaderComponent } from './core/layout/header/header.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  enableBetaFeatures: boolean = false;
   title = 'APM.V18';
   pageTitle = 'Acme Product Management';
-  configEnvService = inject(ConfigEnvService);
-  configAppService = inject(AppConfigService);
-  configService = inject(ConfigService);
-  configZodService = inject(ConfigZodService).getConfig();
 
-  configValueKey = ConfigService.Config?.MyKey;
-  userServiceUrl: string | undefined;
-  config$: Observable<IConfig> | undefined;
+  // Inject the single, unified ConfigService
+  private configService = inject(ConfigService);
+
+  // Hold the config for the template
+  public config!: AppConfig;
+
   ngOnInit() {
-    if (
-      this.configAppService.appConfig &&
-      this.configAppService.appConfig['userServiceUrl']
-    ) {
-      this.userServiceUrl = this.configAppService.appConfig['userServiceUrl'];
-    } else {
-      this.userServiceUrl = undefined;
-    }
-    // this.configValue = this.configService.Config?.MyKey;
+    // Get the configuration from the service
+    this.config = this.configService.getConfig();
 
-    this.config$ = this.configService.config$;
-    // this.enableBetaFeatures = this.configEnvService
-    //   .getConfig()
-    //   .enableBetaFeatures; // 👈
+    // Example of how to use a feature flag from the new config
+    const enableBetaFeatures = this.config.enableBetaFeatures ?? false;
+    console.log('Beta features enabled:', enableBetaFeatures);
   }
 }
